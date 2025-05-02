@@ -1,9 +1,9 @@
-package projekt.PD.Security.Service;
+package projekt.PD.DataBase.DB_User.User_Service;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import projekt.PD.DataBase.User;
-import projekt.PD.DataBase.UserRepository;
+import projekt.PD.DataBase.DB_User.User;
+import projekt.PD.DataBase.DB_User.UserRepository;
 import projekt.PD.Security.RestExceptions.Exceptions.LoginAlreadyExistException;
 
 import java.util.List;
@@ -66,5 +66,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean ifUserExists(String login) {
         return userRepository.existsByLogin(login);
+    }
+
+    @Override
+    public boolean ifUserExists(int id) {
+        return userRepository.existsById(id);
+    }
+
+    @Override
+    public List<User> getUsersByRole(String role) {
+        return userRepository.getUsersByRoles(role);
     }
 }

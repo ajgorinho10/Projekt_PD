@@ -32,8 +32,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-        http.csrf(csrf->csrf.ignoringRequestMatchers("/auth/**"));
-        http.authorizeHttpRequests(authorize->authorize.requestMatchers("/auth/login","/auth/logout").permitAll());
+        http.csrf(csrf->csrf.disable());
+        http.authorizeHttpRequests(authorize->authorize.requestMatchers("/auth/**").permitAll());
         http.authorizeHttpRequests(authorize->authorize.anyRequest().authenticated());
         http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED).maximumSessions(1).maxSessionsPreventsLogin(false));
 
@@ -52,7 +52,16 @@ public class SecurityConfig {
 
     @Bean
     public RoleHierarchy roleHierarchy() {
-        return RoleHierarchyImpl.fromHierarchy("hierarchy");
+        RoleHierarchyImpl hierarchy = new RoleHierarchyImpl();
+
+        String hierarchyString = """
+            ROLE_ADMIN > ROLE_MODERATOR
+            ROLE_MODERATOR > ROLE_TRAINER
+            ROLE_TRAINER > ROLE_USER
+        """;
+
+        hierarchy.setHierarchy(hierarchyString);
+        return hierarchy;
     }
 
     @Bean

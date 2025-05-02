@@ -5,9 +5,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ProblemDetail;
 
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import projekt.PD.Security.RestExceptions.Exceptions.InvalidLoginOrPasswordException;
 import projekt.PD.Security.RestExceptions.Exceptions.LoginAlreadyExistException;
 
 import javax.security.auth.login.LoginException;
@@ -20,6 +22,23 @@ public class GlobalExceptionHandler {
         ProblemDetail errorDetail = null;
         errorDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_ACCEPTABLE, exception.getMessage());
         errorDetail.setProperty("description", "login");
+        return errorDetail;
+    }
+
+    @ExceptionHandler(InvalidLoginOrPasswordException.class)
+    public ProblemDetail handleInvalidLoginOrPasswordException(InvalidLoginOrPasswordException exception) {
+        ProblemDetail errorDetail = null;
+        errorDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_ACCEPTABLE, exception.getMessage());
+        errorDetail.setProperty("description", "login or password");
+        return errorDetail;
+    }
+
+    @ExceptionHandler(AuthorizationDeniedException.class)
+    public ProblemDetail handleAuthorizationDeniedException(AuthorizationDeniedException exception) {
+        ProblemDetail errorDetail = null;
+        errorDetail = ProblemDetail.forStatusAndDetail(HttpStatus.FORBIDDEN, exception.getMessage());
+        errorDetail.setProperty("description", "Nie masz uprawnień do tego zasobu");
+
         return errorDetail;
     }
 

@@ -1,6 +1,6 @@
-package projekt.PD.Security.Service;
+package projekt.PD.DataBase.DB_User.User_Service;
 
-import projekt.PD.DataBase.User;
+import projekt.PD.DataBase.DB_User.User;
 
 import java.util.List;
 
@@ -14,4 +14,6 @@ public interface UserService {
     Boolean deleteUser(int id);
     void changeRole(int id, String role);
     boolean ifUserExists(String login);
+    boolean ifUserExists(int id);
+    List<User> getUsersByRole(String role);
 }

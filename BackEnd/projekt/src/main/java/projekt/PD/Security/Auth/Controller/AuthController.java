@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import projekt.PD.Controller.ResponseMSG;
+import projekt.PD.DataBase.DB_User.User_Service.UserService;
+import projekt.PD.DataBase.DB_User.User;
+import projekt.PD.Security.Auth.AuthRegister;
 import projekt.PD.Security.Auth.AuthRequest;
 import projekt.PD.Security.Auth.AuthResponse;
 import projekt.PD.Security.RestExceptions.Exceptions.InvalidLoginOrPasswordException;
@@ -26,10 +28,12 @@ public class AuthController {
 
     private final AuthenticationManager authenticationManager;
     private final SecurityContextRepository securityContextRepository;
+    private final UserService userService;
 
-    public AuthController(AuthenticationManager authenticationManager, SecurityContextRepository securityContextRepository) {
+    public AuthController(AuthenticationManager authenticationManager, SecurityContextRepository securityContextRepository, UserService userService) {
         this.authenticationManager = authenticationManager;
         this.securityContextRepository = securityContextRepository;
+        this.userService = userService;
     }
 
     @PostMapping("/login")
@@ -65,9 +69,23 @@ public class AuthController {
             return ResponseEntity.ok(response);
 
         }catch (Exception e){
-            throw e;
+            throw new InvalidLoginOrPasswordException("Błędny login lub hasło");
         }
 
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<AuthResponse> register(@RequestBody AuthRegister input){
+
+        User user = new User();
+        user.setFirstName(input.getFirstName());
+        user.setLastName(input.getLastName());
+        user.setLogin(input.getLogin());
+        user.setPassword(input.getPassword());
+        user.setRoles("ROLE_USER");
+
+        User savedUser = userService.createUser(user);
+        return new ResponseEntity<>(new AuthResponse(true, input.getLogin(), input.getPassword()), HttpStatus.CREATED);
     }
 
     @PostMapping("/logout")

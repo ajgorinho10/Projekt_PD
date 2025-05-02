@@ -1,18 +1,12 @@
-package projekt.PD.DataBase;
+package projekt.PD.DataBase.DB_User;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
+import projekt.PD.DataBase.DB_Trainer.Trainer;
+import projekt.PD.DataBase.DB_UserWorkout.User_Workouts;
 
-import java.io.Serializable;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Table(name = "\"users\"")
@@ -38,5 +32,9 @@ public class User{
 
     @Column(nullable = false)
     private String lastName;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private Trainer trainer;
 
 }
