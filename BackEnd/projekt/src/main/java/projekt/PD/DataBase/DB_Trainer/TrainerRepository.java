@@ -1,9 +1,14 @@
 package projekt.PD.DataBase.DB_Trainer;
 
+import jakarta.validation.constraints.NotNull;
 import org.springframework.data.jpa.repository.JpaRepository;
-import projekt.PD.DataBase.DB_User.User;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.NonNullApi;
 
-public interface TrainerRepository extends JpaRepository<Trainer, Integer> {
+import java.util.List;
+import java.util.Optional;
+
+public interface TrainerRepository extends JpaRepository<Trainer, Long> {
     Trainer findBySpecialization(String specialization);
-    Trainer findById(int id);
+    Optional<Trainer> findById( Long id);
 }

@@ -8,12 +8,12 @@ public interface UserService {
 
     List<User> getAllUsers();
     User findUserByLogin(String login);
-    User findUserById(int id);
+    User findUserById(Long id);
     User createUser(User user);
     User updateUser(User user);
-    Boolean deleteUser(int id);
-    void changeRole(int id, String role);
+    Boolean deleteUser(Long id);
+    void changeRole(Long id, String role);
     boolean ifUserExists(String login);
-    boolean ifUserExists(int id);
+    boolean ifUserExists(Long id);
     List<User> getUsersByRole(String role);
 }

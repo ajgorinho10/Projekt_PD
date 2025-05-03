@@ -4,6 +4,9 @@ import org.springframework.stereotype.Service;
 import projekt.PD.DataBase.DB_Trainer.Trainer;
 import projekt.PD.DataBase.DB_Trainer.TrainerRepository;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service
 public class TrainerServiceImpl implements TrainerService {
 
@@ -19,17 +22,22 @@ public class TrainerServiceImpl implements TrainerService {
     }
 
     @Override
-    public Trainer findById(int id) {
+    public Optional<Trainer> findById(Long id) {
         return trainerRepository.findById(id);
     }
 
     @Override
-    public void deleteById(int id) {
+    public void deleteById(Long id) {
         trainerRepository.deleteById(id);
     }
 
     @Override
     public void createTrainer(Trainer trainer) {
         trainerRepository.save(trainer);
+    }
+
+    @Override
+    public List<Trainer> getAll() {
+        return trainerRepository.findAll();
     }
 }

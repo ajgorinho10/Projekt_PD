@@ -8,25 +8,23 @@ import projekt.PD.DataBase.DB_User.User_Service.UserDTO;
 import projekt.PD.DataBase.DB_UserWorkout.User_Workouts;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class WorkoutDTO {
 
-    private int id;
+    private Long id;
     private String title;
     private String description;
     private Date date;
-    private UserDTO user;
-    private TrainerDTO trainer;
 
-    public WorkoutDTO(User_Workouts workout, TrainerDTO trainer,UserDTO user) {
+    public WorkoutDTO(User_Workouts workout) {
         this.id = workout.getId();
         this.title = workout.getTitle();
         this.description = workout.getDescription();
         this.date = workout.getDate();
-        this.user = user;
-        this.trainer = trainer;
     }
+
 }

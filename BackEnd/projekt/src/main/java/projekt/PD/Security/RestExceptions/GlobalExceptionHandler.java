@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ProblemDetail;
 
 import org.springframework.security.authorization.AuthorizationDeniedException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -13,6 +14,7 @@ import projekt.PD.Security.RestExceptions.Exceptions.InvalidLoginOrPasswordExcep
 import projekt.PD.Security.RestExceptions.Exceptions.LoginAlreadyExistException;
 
 import javax.security.auth.login.LoginException;
+import java.util.Objects;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -39,6 +41,14 @@ public class GlobalExceptionHandler {
         errorDetail = ProblemDetail.forStatusAndDetail(HttpStatus.FORBIDDEN, exception.getMessage());
         errorDetail.setProperty("description", "Nie masz uprawnień do tego zasobu");
 
+        return errorDetail;
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ProblemDetail handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
+        ProblemDetail errorDetail = null;
+        errorDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, Objects.requireNonNull(exception.getBindingResult().getFieldError()).getDefaultMessage());
+        errorDetail.setProperty("description", Objects.requireNonNull(exception.getBindingResult().getFieldError()).getField());
         return errorDetail;
     }
 

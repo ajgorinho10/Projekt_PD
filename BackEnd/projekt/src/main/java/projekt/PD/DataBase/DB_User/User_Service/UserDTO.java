@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class UserDTO {
 
-    private int id;
+    private Long id;
     private String first_name;
     private String last_name;
     private String roles;

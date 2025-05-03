@@ -30,14 +30,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findUserById(int id) {
+    public User findUserById(Long id) {
         return userRepository.findById(id);
     }
 
     @Override
     public User createUser(User user) {
 
-        if(userRepository.findByLogin(user.getLogin()) != null) {
+        if(userRepository.existsByLogin(user.getLogin())) {
             throw new LoginAlreadyExistException("Login już istnieje !");
         }
 
@@ -51,14 +51,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Boolean deleteUser(int id) {
+    public Boolean deleteUser(Long id) {
        userRepository.deleteById(id);
 
        return true;
     }
 
     @Override
-    public void changeRole(int id, String role) {
+    public void changeRole(Long id, String role) {
         User user = userRepository.findById(id);
         user.setRoles(role);
     }
@@ -69,7 +69,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean ifUserExists(int id) {
+    public boolean ifUserExists(Long id) {
         return userRepository.existsById(id);
     }
 
