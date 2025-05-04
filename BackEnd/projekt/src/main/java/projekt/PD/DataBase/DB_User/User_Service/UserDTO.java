@@ -29,4 +29,12 @@ public class UserDTO {
         this.roles = user.getRoles();
         this.login = user.getLogin();
     }
+
+    public static List<UserDTO> toDTO(List<User> users) {
+        List<UserDTO> userDTO = new ArrayList<>();
+        for (User user : users) {
+            userDTO.add(new UserDTO(user));
+        }
+        return userDTO;
+    }
 }

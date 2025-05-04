@@ -7,6 +7,7 @@ import projekt.PD.DataBase.DB_Trainer.Trainer_Service.TrainerDTO;
 import projekt.PD.DataBase.DB_User.User_Service.UserDTO;
 import projekt.PD.DataBase.DB_UserWorkout.User_Workouts;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -27,4 +28,11 @@ public class WorkoutDTO {
         this.date = workout.getDate();
     }
 
+    public static List<WorkoutDTO> toDTO(List<User_Workouts> workouts) {
+        List<WorkoutDTO> workoutDTOs = new ArrayList<>();
+        for (User_Workouts workout : workouts) {
+            workoutDTOs.add(new WorkoutDTO(workout));
+        }
+        return workoutDTOs;
+    }
 }

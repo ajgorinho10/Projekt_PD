@@ -4,9 +4,11 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.lang.Nullable;
 import projekt.PD.DataBase.DB_Trainer.Trainer;
 import projekt.PD.DataBase.DB_UserTrainingPlan.UserTrainingPlan;
 import projekt.PD.DataBase.DB_UserWorkout.User_Workouts;
+import projekt.PD.DataBase.PD_Course.Course;
 
 import java.util.*;
 
@@ -47,5 +49,16 @@ public class User{
     @JsonManagedReference
     private List<UserTrainingPlan> userTrainingPlans = new ArrayList<>();
 
+    @ManyToMany
+    @JoinTable(
+            name = "user_course",
+            joinColumns = @JoinColumn(name = "users_id"),
+            inverseJoinColumns = @JoinColumn(name = "course_id")
+    )
+    private List<Course> userCourse = new ArrayList<>();
 
+    @Nullable
+    public Trainer getTrainer() {
+        return this.trainer;
+    }
 }

@@ -13,6 +13,7 @@ import projekt.PD.DataBase.DB_Trainer.Trainer_Service.TrainerDTO;
 import projekt.PD.DataBase.DB_Trainer.Trainer_Service.TrainerService;
 import projekt.PD.DataBase.DB_User.User_Service.UserDTO;
 import projekt.PD.DataBase.DB_UserTrainingPlan.UserTrainingPlan;
+import projekt.PD.DataBase.DB_UserTrainingPlan.UserTrainingPlan_Service.UserTrainingPlanDTO;
 import projekt.PD.DataBase.DB_UserTrainingPlan.UserTrainingPlan_Service.UserTrainingPlanService;
 import projekt.PD.DataBase.DB_UserWorkout.UserWorkout_Service.User_WorkoutService;
 import projekt.PD.DataBase.DB_User.User;
@@ -51,16 +52,20 @@ public class UserController {
     // GIT - zostawiamy
     @RolesAllowed({"USER",})
     @PostMapping("/trainer/{id}")
-    public ResponseEntity<User> addTrainer(@RequestBody Trainer trainer,@PathVariable Long id) {
+    public ResponseEntity<?> addTrainer(@RequestBody Trainer trainer,@PathVariable Long id) {
         if(userService.ifUserExists(id)){
 
             User user = userService.findUserById(id);
+            if(user.getTrainer() != null){
+                return new ResponseEntity<>("User is already trainer",HttpStatus.CONFLICT);
+            }
             user.setRoles("ROLE_TRAINER");
             trainer.setUser(user);
             trainer.setId(null);
+            trainer.setCourses(null);
             trainerService.createTrainer(trainer);
 
-            return new ResponseEntity<>(user,HttpStatus.CREATED);
+            return new ResponseEntity<>("User is now Trainer",HttpStatus.CREATED);
         }
 
        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -68,19 +73,22 @@ public class UserController {
 
     // Pobieranie listy trenerów
     @GetMapping("/trainer")
-    public ResponseEntity<List<TrainerDTO>> getAllTrainers() {
-        List<TrainerDTO> trainers = trainerToTrainerDTO(trainerService.getAll());
+    public ResponseEntity<?> getAllTrainers() {
+        List<Trainer> trainers = trainerService.getAll();
+        if(!trainers.isEmpty()){
+            return new ResponseEntity<>(TrainerDTO.toDTO(trainers), HttpStatus.OK);
+        }
 
-
-        return new ResponseEntity<>(trainers,HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     // Pobieranie informacji o sobie
     @GetMapping("/me")
     public ResponseEntity<?> getCurrentUser() {
         User user = getUserID();
+        UserDTO userDTO = new UserDTO(user);
 
-        return new ResponseEntity<>(user, HttpStatus.OK);
+        return new ResponseEntity<>(userDTO, HttpStatus.OK);
 
     }
 
@@ -92,22 +100,25 @@ public class UserController {
     //          -- usunięcie treningu (DEL)
 
     @GetMapping("/workout")
-    public ResponseEntity<List<WorkoutDTO>> getAllUser_Workouts() {
+    public ResponseEntity<?> getAllUser_Workouts() {
         User user = getUserID();
-        List<WorkoutDTO> userWKOUT = userWorkoutToWorkoutDTO(user_workoutService.findByUser_Id(user.getId()));
+        List<User_Workouts> userWKOUT = user_workoutService.findByUser_Id(user.getId());
+        if(!userWKOUT.isEmpty()){
+            return new ResponseEntity<>(userWKOUT,HttpStatus.OK);
+        }
 
-        return new ResponseEntity<>(userWKOUT, HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @GetMapping("/workout/{id}")
     public ResponseEntity<?> getUser_Workouts(@PathVariable Long id) {
         User user = getUserID();
         Optional<User_Workouts> uw = user_workoutService.findById(id, user.getId());
-        if(uw.isEmpty()){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        if(uw.isPresent()){
+            return new ResponseEntity<>(new WorkoutDTO(uw.get()),HttpStatus.OK);
         }
 
-        return new ResponseEntity<>(uw,HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @PostMapping("/workout")
@@ -150,22 +161,26 @@ public class UserController {
     public ResponseEntity<?> getAllUser_Trainers() {
         User user = getUserID();
         List<UserTrainingPlan> plan = userTrainingPlanService.findByUser_Id(user.getId());
+
         if(plan.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        return new ResponseEntity<>(plan, HttpStatus.OK);
+        List<UserTrainingPlanDTO> planDTO = UserTrainingPlanDTO.toDTO(plan);
+        return new ResponseEntity<>(planDTO, HttpStatus.OK);
     }
 
     @GetMapping("/trainingplan/{id}")
     public ResponseEntity<?> getAllUser_Trainers(@PathVariable Long id) {
         User user = getUserID();
         Optional<UserTrainingPlan> plan = userTrainingPlanService.findById(id,user.getId());
-        if(plan.isEmpty()){
-            return new ResponseEntity<>("No Training plan with this ID",HttpStatus.NOT_FOUND);
+        if(plan.isPresent()){
+            UserTrainingPlanDTO planDTO = new UserTrainingPlanDTO(plan.get());
+            return new ResponseEntity<>(planDTO,HttpStatus.OK);
         }
 
-        return new ResponseEntity<>(plan, HttpStatus.OK);
+
+        return new ResponseEntity<>("No Training plan with this ID",HttpStatus.NOT_FOUND);
     }
 
     @PostMapping("/trainingplan")
@@ -188,37 +203,10 @@ public class UserController {
     }
 
 
-
-    //Funkcje pomocniczne do bezpiecznych odpowiedzi (DTO)
+    //Funkcja pomocniczne do indentyfikowania uzytkownika
     private User getUserID() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         return userService.findUserByLogin(auth.getName());
     }
 
-    private List<UserDTO> userToUserDTO(List<User> users) {
-        List<UserDTO> userDTOs = new ArrayList<>();
-        for (User user : users) {
-            userDTOs.add(new UserDTO(user));
-        }
-
-        return userDTOs;
-    }
-
-    private List<TrainerDTO> trainerToTrainerDTO(List<Trainer> trainers) {
-        List<TrainerDTO> trainerDTOs = new ArrayList<>();
-        for (Trainer trainer : trainers) {
-            trainerDTOs.add(new TrainerDTO(trainer.getUser()));
-        }
-
-        return trainerDTOs;
-    }
-
-    private List<WorkoutDTO> userWorkoutToWorkoutDTO(List<User_Workouts> workouts){
-        List<WorkoutDTO> workoutDTOs = new ArrayList<>();
-        for (User_Workouts user_workout : workouts) {
-            workoutDTOs.add(new WorkoutDTO(user_workout));
-        }
-
-        return workoutDTOs;
-    }
 }
