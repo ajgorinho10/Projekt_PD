@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.lang.Nullable;
+import projekt.PD.DataBase.DB_TrainerPlan.TrainerPlan;
 import projekt.PD.DataBase.DB_User.User;
 import projekt.PD.DataBase.PD_Course.Course;
 
@@ -34,6 +35,9 @@ public class Trainer {
 
     @OneToMany(mappedBy = "courseTrainer")
     private List<Course> courses;
+
+    @OneToMany(mappedBy = "planTrainer")
+    private List<TrainerPlan> trainerPlanForUser;
 
     @Nullable
     public Long getId() {

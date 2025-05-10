@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.lang.Nullable;
 import projekt.PD.DataBase.DB_Trainer.Trainer;
+import projekt.PD.DataBase.DB_TrainerPlan.TrainerPlan;
 import projekt.PD.DataBase.DB_UserTrainingPlan.UserTrainingPlan;
 import projekt.PD.DataBase.DB_UserWorkout.User_Workouts;
 import projekt.PD.DataBase.PD_Course.Course;
@@ -56,6 +57,9 @@ public class User{
             inverseJoinColumns = @JoinColumn(name = "course_id")
     )
     private List<Course> userCourse = new ArrayList<>();
+
+    @OneToMany(mappedBy = "trainerPlanUser")
+    private List<TrainerPlan> trainerPlan = new ArrayList<>();
 
     @Nullable
     public Trainer getTrainer() {
