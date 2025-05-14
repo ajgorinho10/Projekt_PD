@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Workout List</title>
+</head>
+<body>
+
+<h1>Twoje Treningi</h1>
+
+<div th:if="${message}">
+    <p th:text="${message}"></p>
+</div>
+
+<div th:if="${workouts}">
+    <ul>
+        <li th:each="workout : ${workouts}">
+            <p><strong>ID:</strong> <span th:text="${workout.id}">[id]</span></p>
+            <p><strong>Tytuł:</strong> <span th:text="${workout.title}">[title]</span></p>
+            <p><strong>Opis:</strong> <span th:text="${workout.description}">[description]</span></p>
+            <p><strong>Data:</strong> <span th:text="${#dates.format(workout.date, 'yyyy-MM-dd')}">[date]</span></p>
+            <hr>
+        </li>
+    </ul>
+</div>
+
+</body>
+</html>

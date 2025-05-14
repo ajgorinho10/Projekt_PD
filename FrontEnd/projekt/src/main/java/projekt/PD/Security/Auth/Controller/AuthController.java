@@ -15,6 +15,7 @@ import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import projekt.PD.DataBase.DB_User.User_Service.UserService;
 import projekt.PD.DataBase.DB_User.User;
 import projekt.PD.Security.Auth.AuthRegister;
@@ -22,13 +23,8 @@ import projekt.PD.Security.Auth.AuthRequest;
 import projekt.PD.Security.Auth.AuthResponse;
 import projekt.PD.Security.RestExceptions.Exceptions.InvalidLoginOrPasswordException;
 
-import java.io.IOException;
-
-
-// to show html
 //@RestController
 @Controller
-// yep
 @RequestMapping("/auth")
 public class AuthController {
 
@@ -42,17 +38,24 @@ public class AuthController {
         this.userService = userService;
     }
 
-    @GetMapping("/login")
-    public String showLoginForm(Model model) {
-        model.addAttribute("formData", new AuthForm());
-        return "login";
+    @GetMapping("/")
+    public String showHomePage() {
+        return "index";
     }
 
 
+
+    @GetMapping("/login")
+    public String showLoginForm(Model model) {
+        model.addAttribute("formData", new AuthRequest());
+        return "login";
+    }
+
     @PostMapping("/login")
-    public String login(@ModelAttribute("formData") AuthForm input,
+    public String login(@ModelAttribute("formData") AuthRequest input,
                         HttpServletRequest httpRequest,
                         HttpServletResponse httpResponse,
+                        RedirectAttributes redirectAttributes,
                         Model model) {
         try {
             // Authenticate user
@@ -74,7 +77,7 @@ public class AuthController {
 
             // Pass success message to view
             model.addAttribute("message", "Zalogowano pomyślnie jako: " + authentication.getName());
-            return "temp-site"; // a new Thymeleaf template you'll create
+            return "redirect:/auth/dashboard";
 
         } catch (Exception e) {
             model.addAttribute("error", "Błędny login lub hasło");
@@ -83,36 +86,59 @@ public class AuthController {
         }
     }
 
-
-    @PostMapping("/register")
-    public ResponseEntity<AuthResponse> register(@Valid @RequestBody AuthRegister input){
-
-        User user = new User();
-        user.setFirstName(input.getFirstName());
-        user.setLastName(input.getLastName());
-        user.setLogin(input.getLogin());
-        user.setPassword(input.getPassword());
-        user.setRoles("ROLE_USER");
-
-        User savedUser = userService.createUser(user);
-        return new ResponseEntity<>(new AuthResponse(true, input.getLogin(), input.getPassword()), HttpStatus.CREATED);
+    @GetMapping("/dashboard")
+    public String showDashboard(Model model) {
+        return "dashboard";
     }
 
+    @GetMapping("/register")
+    public String showRegistrationForm(Model model) {
+        model.addAttribute("formData", new AuthRegister());
+        return "register";
+    }
+
+
+
+    @PostMapping("/register")
+    public String register(@Valid @ModelAttribute("formData") AuthRegister input,
+                           Model model) {
+        try {
+            User user = new User();
+            user.setFirstName(input.getFirstName());
+            user.setLastName(input.getLastName());
+            user.setLogin(input.getLogin());
+            user.setPassword(input.getPassword());
+            user.setRoles("ROLE_USER");
+
+            userService.createUser(user);
+
+            model.addAttribute("message", "Rejestracja zakończona sukcesem! Możesz się teraz zalogować.");
+            return "login"; // a new success page you'll create
+
+        } catch (Exception e) {
+            model.addAttribute("error", "Rejestracja nie powiodła się: " + e.getMessage());
+            return "register";
+        }
+    }
+
+
     @PostMapping("/logout")
-    public ResponseEntity<AuthResponse> logout(HttpServletRequest request, HttpServletResponse response) {
-        // Wylogowanie użytkownika
+    public String logoutHtml(HttpServletRequest request, HttpServletResponse response, Model model) {
+        // Clear security context
         SecurityContextHolder.clearContext();
         HttpSession session = request.getSession(false);
         if (session != null) {
             session.invalidate();
         }
 
-        // Wyczyszczenie ciasteczka JSESSIONID
+        // Clear session cookie
         jakarta.servlet.http.Cookie cookie = new jakarta.servlet.http.Cookie("JSESSIONID", null);
-        cookie.setPath("/auth/logout");
+        cookie.setPath("/");
         cookie.setMaxAge(0);
         response.addCookie(cookie);
 
-        return ResponseEntity.ok(new AuthResponse(true, "You have logged out successfully.", null));
+        model.addAttribute("message", "Zostałeś poprawnie wylogowany.");
+        return "index";
     }
+
 }

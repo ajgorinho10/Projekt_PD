@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Welcome</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 40px;
+            text-align: center;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<h1>Welcome to Pumping Iron Inc.</h1>
+<p>Please choose an option:</p>
+
+<a th:href="@{/auth/login}"><button>Login</button></a>
+<a th:href="@{/auth/register}"><button>Register</button></a>
+</body>
+</html>

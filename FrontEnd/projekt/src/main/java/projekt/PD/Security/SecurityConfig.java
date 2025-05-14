@@ -33,6 +33,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http.csrf(csrf->csrf.disable());
+        http.authorizeHttpRequests(authorize->authorize.requestMatchers("/").permitAll());
         http.authorizeHttpRequests(authorize->authorize.requestMatchers("/auth/**").permitAll());
         http.authorizeHttpRequests(authorize->authorize.anyRequest().authenticated());
         http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED).maximumSessions(1).maxSessionsPreventsLogin(false));

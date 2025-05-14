@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import projekt.PD.DataBase.DB_Trainer.Trainer;
 import projekt.PD.DataBase.DB_Trainer.Trainer_Service.TrainerDTO;
@@ -25,7 +27,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@RestController
+//@RestController
+@Controller
 @RequestMapping("/users")
 
 public class UserController {
@@ -84,13 +87,13 @@ public class UserController {
 
     // Pobieranie informacji o sobie
     @GetMapping("/me")
-    public ResponseEntity<?> getCurrentUser() {
+    public String getCurrentUser(Model model) {
         User user = getUserID();
         UserDTO userDTO = new UserDTO(user);
-
-        return new ResponseEntity<>(userDTO, HttpStatus.OK);
-
+        model.addAttribute("user", userDTO);
+        return "me"; // Refers to me.html or me.html in templates folder
     }
+
 
     // Treningi użytkownika
     // METODY:
@@ -100,15 +103,20 @@ public class UserController {
     //          -- usunięcie treningu (DEL)
 
     @GetMapping("/workout")
-    public ResponseEntity<?> getAllUser_Workouts() {
+    public String getAllUser_Workouts(Model model) {
         User user = getUserID();
         List<User_Workouts> userWKOUT = user_workoutService.findByUser_Id(user.getId());
-        if(!userWKOUT.isEmpty()){
-            return new ResponseEntity<>(userWKOUT,HttpStatus.OK);
+
+        if (!userWKOUT.isEmpty()) {
+            List<WorkoutDTO> workouts = WorkoutDTO.toDTO(userWKOUT);
+            model.addAttribute("workouts", workouts);
+        } else {
+            model.addAttribute("message", "Twoja lista treningów jest pusta.");
         }
 
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return "workout";
     }
+
 
     @GetMapping("/workout/{id}")
     public ResponseEntity<?> getUser_Workouts(@PathVariable Long id) {
