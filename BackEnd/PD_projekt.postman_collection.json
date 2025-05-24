@@ -24,14 +24,14 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/auth/login",
+							"raw": "http://localhost:8080/api/login",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
-								"auth",
+								"api",
 								"login"
 							]
 						}
@@ -56,14 +56,14 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/auth/register",
+							"raw": "http://localhost:8080/api/register",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
-								"auth",
+								"api",
 								"register"
 							]
 						}
@@ -104,13 +104,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/users/me",
+							"raw": "http://localhost:8080/api/users/me",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
+								"api",
 								"users",
 								"me"
 							]
@@ -124,13 +125,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/users/workout",
+							"raw": "http://localhost:8080/api/users/workout",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
+								"api",
 								"users",
 								"workout"
 							]
@@ -144,13 +146,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/users/workout/3",
+							"raw": "http://localhost:8080/api/users/workout/3",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
+								"api",
 								"users",
 								"workout",
 								"3"
@@ -165,13 +168,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/users/trainer",
+							"raw": "http://localhost:8080/api/users/trainer",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
+								"api",
 								"users",
 								"trainer"
 							]
@@ -185,13 +189,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/users/trainingplan",
+							"raw": "http://localhost:8080/api/users/trainingplan",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
+								"api",
 								"users",
 								"trainingplan"
 							]
@@ -205,13 +210,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/users/trainingplan/1",
+							"raw": "http://localhost:8080/api/users/trainingplan/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
+								"api",
 								"users",
 								"trainingplan",
 								"1"
@@ -240,13 +246,14 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/users/workout",
+							"raw": "http://localhost:8080/api/users/workout",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
+								"api",
 								"users",
 								"workout"
 							]
@@ -269,13 +276,14 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/users/trainer/2",
+							"raw": "http://localhost:8080/api/users/trainer/2",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
+								"api",
 								"users",
 								"trainer",
 								"2"
@@ -299,13 +307,14 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/users/trainingplan",
+							"raw": "http://localhost:8080/api/users/trainingplan",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
+								"api",
 								"users",
 								"trainingplan"
 							]
@@ -324,13 +333,14 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/users/trainingplan/1",
+							"raw": "http://localhost:8080/api/users/trainingplan/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
+								"api",
 								"users",
 								"trainingplan",
 								"1"
@@ -345,13 +355,14 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/users/workout/4",
+							"raw": "http://localhost:8080/api/users/workout/4",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
+								"api",
 								"users",
 								"workout",
 								"4"
@@ -371,13 +382,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/course",
+							"raw": "http://localhost:8080/api/course",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
+								"api",
 								"course"
 							]
 						}
@@ -390,13 +402,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/course/trainer",
+							"raw": "http://localhost:8080/api/course/trainer",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
+								"api",
 								"course",
 								"trainer"
 							]
@@ -410,13 +423,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/course/user",
+							"raw": "http://localhost:8080/api/course/user",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
+								"api",
 								"course",
 								"user"
 							]
@@ -439,13 +453,14 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/course/trainer",
+							"raw": "http://localhost:8080/api/course/trainer",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
+								"api",
 								"course",
 								"trainer"
 							]
@@ -459,13 +474,14 @@
 						"method": "POST",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/course/user/1",
+							"raw": "http://localhost:8080/api/course/user/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
+								"api",
 								"course",
 								"user",
 								"1"
@@ -480,13 +496,14 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/course/trainer/3",
+							"raw": "http://localhost:8080/api/course/trainer/3",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
+								"api",
 								"course",
 								"trainer",
 								"3"
@@ -501,13 +518,14 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/course/user/1",
+							"raw": "http://localhost:8080/api/course/user/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
+								"api",
 								"course",
 								"user",
 								"1"
@@ -527,13 +545,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/trainerPlan/user",
+							"raw": "http://localhost:8080/api/trainerPlan/user",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
+								"api",
 								"trainerPlan",
 								"user"
 							]
@@ -547,13 +566,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/trainerPlan/user/1",
+							"raw": "http://localhost:8080/api/trainerPlan/user/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
+								"api",
 								"trainerPlan",
 								"user",
 								"1"
@@ -568,13 +588,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/trainerPlan/trainer",
+							"raw": "http://localhost:8080/api/trainerPlan/trainer",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
+								"api",
 								"trainerPlan",
 								"trainer"
 							]
@@ -588,16 +609,17 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/trainerPlan/trainer/1",
+							"raw": "http://localhost:8080/api/trainerPlan/trainer/2",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
+								"api",
 								"trainerPlan",
 								"trainer",
-								"1"
+								"2"
 							]
 						}
 					},
@@ -618,13 +640,14 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/trainerPlan/trainer/1",
+							"raw": "http://localhost:8080/api/trainerPlan/trainer/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
+								"api",
 								"trainerPlan",
 								"trainer",
 								"1"
@@ -639,13 +662,14 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/trainerPlan/trainer/1",
+							"raw": "http://localhost:8080/api/trainerPlan/trainer/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
+								"api",
 								"trainerPlan",
 								"trainer",
 								"1"
@@ -660,13 +684,14 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/trainerPlan/user/1",
+							"raw": "http://localhost:8080/api/trainerPlan/user/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
+								"api",
 								"trainerPlan",
 								"user",
 								"1"
