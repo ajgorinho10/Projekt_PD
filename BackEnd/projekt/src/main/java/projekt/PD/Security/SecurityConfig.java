@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,10 +33,48 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-        http.csrf(csrf->csrf.disable());
-        http.authorizeHttpRequests(authorize->authorize.requestMatchers("/auth/**").permitAll());
-        http.authorizeHttpRequests(authorize->authorize.anyRequest().authenticated());
-        http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED).maximumSessions(1).maxSessionsPreventsLogin(false));
+        http.csrf(csrf->csrf
+                .disable()
+        );
+
+        http.authorizeHttpRequests(authorize->authorize
+                .requestMatchers("/css/**","/api/**","/login","/register","/")
+                .permitAll());
+
+        http.authorizeHttpRequests(authorize->authorize
+                .anyRequest()
+                .authenticated()
+        );
+
+        http.formLogin((form) -> form
+                .loginPage("/login")
+                .loginProcessingUrl("/performLogin")
+                .defaultSuccessUrl("/home",true)
+                .usernameParameter("username")
+                .passwordParameter("password")
+                .permitAll()
+        );
+
+        http.logout(logout -> logout
+                .logoutUrl("/performLogout")
+                .logoutSuccessUrl("/login?logout=true")
+                .invalidateHttpSession(true)
+                .clearAuthentication(true)
+                .deleteCookies("JSESSIONID")
+                .permitAll()
+        );
+
+        http.headers(headers->headers
+                .cacheControl(HeadersConfigurer.CacheControlConfig::disable)
+        );
+
+        http.sessionManagement(session -> session
+                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+                .maximumSessions(1)
+                .maxSessionsPreventsLogin(false)
+        );
+
+
 
         return http.build();
     }

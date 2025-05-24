@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Gym</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<header>
+    <h1>Welcome to Your Gym Application</h1>
+</header>
+
+<nav>
+    <ul>
+        <li><a th:href="@{/}">Home</a></li>
+        <li><a th:href="@{/register}">Register</a></li>
+        <li><a th:href="@{/login}">Login</a></li>
+    </ul>
+</nav>
+
+<div class="container">
+    <div th:if="${logoutMsg}" class="logout-message">
+        <p th:text="${logoutMsg}"></p>
+    </div>
+
+    <div class="card">
+        <h2>Online Gym Services</h2>
+
+        <div class="center-buttons">
+            <a th:href="@{/register}" class="btn">Register</a>
+            <a th:href="@{/login}" class="btn">Login</a>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <p>&copy; 2025 Gym Application. All rights reserved.</p>
+</footer>
+</body>
+</html>

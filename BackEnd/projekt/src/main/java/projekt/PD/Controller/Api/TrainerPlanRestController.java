@@ -1,4 +1,4 @@
-package projekt.PD.Controller;
+package projekt.PD.Controller.Api;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,18 +12,17 @@ import projekt.PD.DataBase.DB_TrainerPlan.TrainerPlan_Service.TrainerPlanService
 import projekt.PD.DataBase.DB_User.User;
 import projekt.PD.DataBase.DB_User.User_Service.UserService;
 
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/trainerPlan")
-public class TrainerPlanController {
+@RequestMapping("/api/trainerPlan")
+public class TrainerPlanRestController {
 
     private final TrainerPlanService trainerPlanService;
     private final UserService userService;
 
-    public TrainerPlanController(TrainerPlanService trainerPlanService, UserService userService) {
+    public TrainerPlanRestController(TrainerPlanService trainerPlanService, UserService userService) {
         this.trainerPlanService = trainerPlanService;
         this.userService = userService;
     }
@@ -43,7 +42,7 @@ public class TrainerPlanController {
         User user = getUserID();
         Optional<TrainerPlan> plan = trainerPlanService.findByIdAndTrainerPlanUser_Id(id,user.getId());
         if(plan.isPresent()) {
-            return new ResponseEntity<>(plan.get(), HttpStatus.OK);
+            return new ResponseEntity<>(new TrainerPlanDTO(plan.get()), HttpStatus.OK);
         }
 
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -83,7 +82,7 @@ public class TrainerPlanController {
         if(user.getTrainer() != null) {
             Optional<TrainerPlan> plan = trainerPlanService.findByIdAndPlanTrainer_Id(id,user.getTrainer().getId());
             if(plan.isPresent()) {
-                return new ResponseEntity<>(plan.get(), HttpStatus.OK);
+                return new ResponseEntity<>(new TrainerPlanDTO(plan.get()), HttpStatus.OK);
             }
         }
 

@@ -1,13 +1,11 @@
-package projekt.PD.Controller;
+package projekt.PD.Controller.Api;
 
-import jakarta.annotation.security.RolesAllowed;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import projekt.PD.DataBase.DB_Trainer.Trainer;
 import projekt.PD.DataBase.DB_User.User;
 import projekt.PD.DataBase.DB_User.User_Service.UserService;
 import projekt.PD.DataBase.PD_Course.Course;
@@ -20,13 +18,13 @@ import java.util.Objects;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/course")
-public class CourseController {
+@RequestMapping("/api/course")
+public class CourseRestController {
 
     private final CourseService courseService;
     private final UserService userService;
 
-    public CourseController(CourseService courseService, UserService userService) {
+    public CourseRestController(CourseService courseService, UserService userService) {
         this.courseService = courseService;
         this.userService = userService;
     }

@@ -4,6 +4,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import projekt.PD.DataBase.DB_User.User;
 import projekt.PD.DataBase.DB_User.UserRepository;
+import projekt.PD.Security.Auth.AuthRegister;
 import projekt.PD.Security.RestExceptions.Exceptions.LoginAlreadyExistException;
 
 import java.util.List;
@@ -35,13 +36,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User createUser(User user) {
+    public User createUser(AuthRegister input) {
+
+        User user = new User();
+        user.setLogin(input.getLogin());
+        user.setPassword(passwordEncoder.encode(input.getPassword()));
+        user.setFirstName(input.getFirstName());
+        user.setLastName(input.getLastName());
+        user.setRoles("ROLE_USER");
 
         if(userRepository.existsByLogin(user.getLogin())) {
             throw new LoginAlreadyExistException("Login już istnieje !");
         }
 
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Gym</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+
+<header>
+    <h1>Profil użytkownika</h1>
+</header>
+
+<nav>
+    <ul>
+        <li><a href="/home" th:href="@{/home}">Strona główna</a></li>
+        <li><a href="/index" th:href="@{/performLogout}">Wyloguj</a></li>
+    </ul>
+</nav>
+
+<div class="container">
+    <div class="card">
+        <h2>Dane użytkownika</h2>
+        <p><strong>ID:</strong> <span th:text="${user.id}">1</span></p>
+        <p><strong>Login:</strong> <span th:text="${user.login}">login123</span></p>
+        <p><strong>Imię:</strong> <span th:text="${user.firstName}">Jan</span></p>
+        <p><strong>Nazwisko:</strong> <span th:text="${user.lastName}">Kowalski</span></p>
+        <p><strong>Role:</strong> <span th:text="${user.roles}">ROLE_USER</span></p>
+
+        <h2>Trener</h2>
+            <div th:if="${user.trainer != null}">
+                <p><strong>Użytkownik jest trenerem:</strong> TAK</p>
+                <p><strong>ID Trenera:</strong> <span th:text="${user.trainer.id}">101</span></p>
+            </div>
+            <div th:if="${user.trainer == null}">
+                <p><strong>Użytkownik jest trenerem:</strong> NIE</p>
+            </div>
+
+
+        <div>
+            <h2>Kursy</h2>
+
+            <div th:if="${user.userCourse.size() > 0}">
+                <ul>
+                    <li th:each="course : ${user.userCourse}" th:text="${course.name}">Kurs 1</li>
+                </ul>
+            </div>
+
+            <div th:if="${user.userCourse.size() == 0}">
+                <p>Brak Kursów</p>
+            </div>
+
+        </div>
+
+        <div>
+            <h2>Własne Plany treningowe</h2>
+
+            <div th:if="${user.userTrainingPlans.size() > 0}">
+                <ul>
+                    <li th:each="plan : ${user.userTrainingPlans}" th:text="'Plan #' + ${plan.id}">Plan 1</li>
+                </ul>
+            </div>
+
+            <div th:if="${user.userTrainingPlans.size() == 0}">
+                <p>Brak planów</p>
+            </div>
+
+        </div>
+
+        <div>
+            <h2>Treningi</h2>
+
+            <div th:if="${user.user_workouts.size() > 0}">
+                <ul>
+                    <li th:each="workout : ${user.user_workouts}" th:text="'Trening #' + ${workout.id}">Trening 1</li>
+                </ul>
+            </div>
+
+            <div th:if="${user.user_workouts.size() == 0}">
+                <p>Brak Traningów</p>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<footer>
+    <p>&copy; 2025 Twoja Aplikacja Treningowa</p>
+</footer>
+
+</body>
+</html>

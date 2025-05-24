@@ -10,13 +10,22 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import projekt.PD.Controller.Api.CourseRestController;
+import projekt.PD.Controller.Api.TrainerPlanRestController;
+import projekt.PD.Controller.Api.UserRestController;
+import projekt.PD.Security.Auth.Controller.AuthRestController;
 import projekt.PD.Security.RestExceptions.Exceptions.InvalidLoginOrPasswordException;
 import projekt.PD.Security.RestExceptions.Exceptions.LoginAlreadyExistException;
 
 import javax.security.auth.login.LoginException;
 import java.util.Objects;
 
-@RestControllerAdvice
+@RestControllerAdvice(assignableTypes = {
+        AuthRestController.class,
+        UserRestController.class,
+        CourseRestController.class,
+        TrainerPlanRestController.class
+})
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(LoginAlreadyExistException.class)

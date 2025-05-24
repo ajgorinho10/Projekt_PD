@@ -12,10 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.context.SecurityContextRepository;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import projekt.PD.DataBase.DB_User.User_Service.UserService;
 import projekt.PD.DataBase.DB_User.User;
 import projekt.PD.Security.Auth.AuthRegister;
@@ -24,14 +21,14 @@ import projekt.PD.Security.Auth.AuthResponse;
 import projekt.PD.Security.RestExceptions.Exceptions.InvalidLoginOrPasswordException;
 
 @RestController
-@RequestMapping("/auth")
-public class AuthController {
+@RequestMapping("/api")
+public class AuthRestController {
 
     private final AuthenticationManager authenticationManager;
     private final SecurityContextRepository securityContextRepository;
     private final UserService userService;
 
-    public AuthController(AuthenticationManager authenticationManager, SecurityContextRepository securityContextRepository, UserService userService) {
+    public AuthRestController(AuthenticationManager authenticationManager, SecurityContextRepository securityContextRepository, UserService userService) {
         this.authenticationManager = authenticationManager;
         this.securityContextRepository = securityContextRepository;
         this.userService = userService;
@@ -78,14 +75,7 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(@Valid @RequestBody AuthRegister input){
 
-        User user = new User();
-        user.setFirstName(input.getFirstName());
-        user.setLastName(input.getLastName());
-        user.setLogin(input.getLogin());
-        user.setPassword(input.getPassword());
-        user.setRoles("ROLE_USER");
-
-        User savedUser = userService.createUser(user);
+        User savedUser = userService.createUser(input);
         return new ResponseEntity<>(new AuthResponse(true, input.getLogin(), input.getPassword()), HttpStatus.CREATED);
     }
 
@@ -106,4 +96,5 @@ public class AuthController {
 
         return ResponseEntity.ok(new AuthResponse(true, "You have logged out successfully.", null));
     }
+
 }

@@ -12,10 +12,10 @@ import lombok.NoArgsConstructor;
 public class AuthRegister {
 
     @NotBlank
-    @Size(min = 3, max = 30)
+    @Size(min = 6, max = 30)
     private String login;
     @NotBlank
-    @Size(min = 3, max = 30)
+    @Size(min = 6, max = 30)
     private String password;
     @NotBlank
     private String firstName;
