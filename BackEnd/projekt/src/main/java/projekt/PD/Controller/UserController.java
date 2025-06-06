@@ -1,6 +1,8 @@
 package projekt.PD.Controller;
 
 import lombok.AllArgsConstructor;
+
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -8,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import projekt.PD.DataBase.DB_User.User;
 import projekt.PD.DataBase.DB_User.User_Service.UserService;
+import projekt.PD.DataBase.PD_Course.Course;
 
 @Controller
 public class UserController {
@@ -25,6 +28,9 @@ public class UserController {
 
         return "home";
     }
+
+
+
 
     private User getUserID() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();

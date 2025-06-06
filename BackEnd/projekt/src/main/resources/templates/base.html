@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:replace="${title}">Base Title</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+
+<header>
+    <h1>Twoja Aplikacja Treningowa</h1>
+</header>
+
+<!-- Fragment: Navigation -->
+<div th:fragment="navigation">
+    <nav>
+        <ul>
+            <li><a th:href="@{/home}">Strona główna</a></li>
+            <li><a th:href="@{/performLogout}">Wyloguj</a></li>
+        </ul>
+        <ul>
+            <li><a th:href="@{/course/all}">Wszystkie kursy</a></li>
+            <li><a th:href="@{/course/user}">Moje kursy</a></li>
+            <li><a th:href="@{/course/trainer}">Kursy trenera</a></li>
+            <li><a th:href="@{/course/form}">Dodaj kurs (Trener)</a></li>
+
+
+        </ul>
+    </nav>
+</div>
+
+
+</body>
+</html>

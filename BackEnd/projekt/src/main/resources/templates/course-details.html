@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="'Szczegóły kursu: ' + ${course.title}">Szczegóły kursu</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+
+<header>
+    <h1 th:text="'Szczegóły kursu: ' + ${course.title}">Szczegóły kursu</h1>
+</header>
+
+<div th:replace="base :: navigation"></div>
+
+<div class="container">
+    <div class="card">
+        <h2>Informacje o kursie</h2>
+
+        <p><strong>ID kursu:</strong> <span th:text="${course.id}">1</span></p>
+        <p><strong>Tytuł:</strong> <span th:text="${course.title}">Nazwa kursu</span></p>
+        <p><strong>Liczba użytkowników zapisanych:</strong> <span th:text="${course.countUsers}">0</span></p>
+
+        <h3>Trener</h3>
+        <p>
+            <strong>Imię:</strong> <span th:text="${course.courseTrainer.firstName}">Imię</span><br>
+            <strong>Nazwisko:</strong> <span th:text="${course.courseTrainer.lastName}">Nazwisko</span><br>
+            <strong>Specjalizacja:</strong> <span th:text="${course.courseTrainer.specialization}">Specjalizacja</span>
+        </p>
+
+        <div class="actions">
+            <a th:href="@{/course/user/{id}(id=${course.id})}" class="btn">Dołącz do kursu</a>
+            <a th:href="@{/course/user/{id}(id=${course.id})}" class="btn">Opuść kurs</a>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <p>&copy; 2025 Twoja Aplikacja Treningowa</p>
+</footer>
+
+</body>
+</html>

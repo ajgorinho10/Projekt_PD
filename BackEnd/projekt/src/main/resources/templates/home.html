@@ -11,42 +11,47 @@
     <h1>Profil użytkownika</h1>
 </header>
 
-<nav>
-    <ul>
-        <li><a href="/home" th:href="@{/home}">Strona główna</a></li>
-        <li><a href="/index" th:href="@{/performLogout}">Wyloguj</a></li>
-    </ul>
-</nav>
+ <div th:replace="base :: navigation"></div> 
+
+ <div th:if="${user == null}">
+    <p style="color:red;">Błąd: użytkownik nie został załadowany.</p>
+</div>
+
+
 
 <div class="container">
     <div class="card">
         <h2>Dane użytkownika</h2>
-        <p><strong>ID:</strong> <span th:text="${user.id}">1</span></p>
-        <p><strong>Login:</strong> <span th:text="${user.login}">login123</span></p>
-        <p><strong>Imię:</strong> <span th:text="${user.firstName}">Jan</span></p>
-        <p><strong>Nazwisko:</strong> <span th:text="${user.lastName}">Kowalski</span></p>
-        <p><strong>Role:</strong> <span th:text="${user.roles}">ROLE_USER</span></p>
+        <p><strong>ID:</strong> <span th:text="${user.id}"></span></p>
+        <p><strong>Login:</strong> <span th:text="${user.login}"></span></p>
+        <p><strong>Imię:</strong> <span th:text="${user.firstName}"></span></p>
+        <p><strong>Nazwisko:</strong> <span th:text="${user.lastName}"></span></p>
+        <p><strong>Role:</strong> <span th:text="${user.roles}"></span></p>
 
-        <h2>Trener</h2>
-            <div th:if="${user.trainer != null}">
-                <p><strong>Użytkownik jest trenerem:</strong> TAK</p>
-                <p><strong>ID Trenera:</strong> <span th:text="${user.trainer.id}">101</span></p>
-            </div>
-            <div th:if="${user.trainer == null}">
-                <p><strong>Użytkownik jest trenerem:</strong> NIE</p>
-            </div>
+<h2>Trener</h2>
+
+<div th:if="${user.trainer != null}">
+    <p><strong>Użytkownik jest trenerem:</strong> TAK</p>
+    <p><strong>ID Trenera:</strong> <span th:text="${user.trainer.id}"></span></p>
+</div>
+
+<div th:if="${user.trainer == null}">
+    <p><strong>Użytkownik jest trenerem:</strong> NIE</p>
+</div>
+
 
 
         <div>
+            
             <h2>Kursy</h2>
 
-            <div th:if="${user.userCourse.size() > 0}">
+            <div th:if="${user.userCourse != null and #lists.size(user.userCourse) > 0}">
                 <ul>
                     <li th:each="course : ${user.userCourse}" th:text="${course.name}">Kurs 1</li>
                 </ul>
             </div>
-
-            <div th:if="${user.userCourse.size() == 0}">
+            
+            <div th:if="${user.userCourse == null or #lists.size(user.userCourse) == 0}">
                 <p>Brak Kursów</p>
             </div>
 
@@ -77,7 +82,7 @@
             </div>
 
             <div th:if="${user.user_workouts.size() == 0}">
-                <p>Brak Traningów</p>
+                <p>Brak Treningów</p>
             </div>
 
         </div>
