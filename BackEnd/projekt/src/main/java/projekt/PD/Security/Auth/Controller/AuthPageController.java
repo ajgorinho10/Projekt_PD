@@ -136,8 +136,23 @@ public class AuthPageController {
         }
     }
 
+        // nie wiem gdzie to wsadzić aby /route strony głównej był normalny
+    @GetMapping("/home")
+    public String home(Model model) {
+        User user = getUserID();
+        model.addAttribute("user", user);
+
+        return "home";
+    }
+
     @GetMapping("/")
     public String index(Model model){
         return "index";
+    }
+
+
+        private User getUserID() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        return userService.findUserByLogin(auth.getName());
     }
 }

@@ -14,6 +14,7 @@
 <!-- Fragment: Navigation -->
 <div th:fragment="navigation">
     <nav>
+        <!-- First row of navigation -->
         <ul>
             <li><a th:href="@{/home}">Strona główna</a></li>
             <li><a th:href="@{/performLogout}">Wyloguj</a></li>
@@ -23,12 +24,21 @@
             <li><a th:href="@{/course/user}">Moje kursy</a></li>
             <li><a th:href="@{/course/trainer}">Kursy trenera</a></li>
             <li><a th:href="@{/course/form}">Dodaj kurs (Trener)</a></li>
-
-
         </ul>
+
+        <!-- Second row of navigation (new buttons) -->
+         
+        <ul>
+            <li><a th:href="@{/users/me}">Moje dane</a></li>
+            <li><a th:href="@{/users/workout}">Moje treningi</a></li>
+            <li><a th:href="@{/users/trainingplan}">Moje plany treningowe</a></li>
+            <li><a th:href="@{/users/trainers}">Lista trenerów</a></li>
+            <li><a th:href="@{/users/trainer}">Zostań trenerem</a></li>
+            
+        </ul>
+        
     </nav>
 </div>
-
 
 </body>
 </html>

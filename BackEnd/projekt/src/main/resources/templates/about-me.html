@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Gym</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+
+<header>
+    <h1>Profil użytkownika</h1>
+</header>
+
+ <div th:replace="base :: navigation"></div> 
+
+
+
+
+<div class="container">
+    <div class="card">
+        <h2>Dane użytkownika</h2>
+        <p><strong>ID:</strong> <span th:text="${user.id}"></span></p>
+        <p><strong>Login:</strong> <span th:text="${user.login}"></span></p>
+        <p><strong>Imię:</strong> <span th:text="${user.firstName}"></span></p>
+        <p><strong>Nazwisko:</strong> <span th:text="${user.lastName}"></span></p>
+        <p><strong>Role:</strong> <span th:text="${user.roles}"></span></p>
+
+    </div>
+</div>
+
+<footer>
+    <p>&copy; 2025 Twoja Aplikacja Treningowa</p>
+</footer>
+
+</body>
+</html>

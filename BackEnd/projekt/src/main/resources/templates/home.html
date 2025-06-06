@@ -13,9 +13,16 @@
 
  <div th:replace="base :: navigation"></div> 
 
- <div th:if="${user == null}">
-    <p style="color:red;">Błąd: użytkownik nie został załadowany.</p>
+<!-- Success Message -->
+<div th:if="${message}" class="alert success">
+    <p th:text="${message}"></p>
 </div>
+
+<!-- Error Message -->
+<div th:if="${error}" class="alert error">
+    <p th:text="${error}"></p>
+</div>
+
 
 
 
