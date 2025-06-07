@@ -54,7 +54,7 @@
 
             <div th:if="${user.userCourse != null and #lists.size(user.userCourse) > 0}">
                 <ul>
-                    <li th:each="course : ${user.userCourse}" th:text="${course.name}">Kurs 1</li>
+                    <li th:each="course : ${user.userCourse}" th:text="${course.title}">Kurs 1</li>
                 </ul>
             </div>
             

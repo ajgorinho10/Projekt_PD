@@ -68,7 +68,7 @@ public class AuthPageController {
     public String performLogin(@ModelAttribute String username,
                         @ModelAttribute String password,
                         HttpServletRequest httpRequest,
-                        HttpServletResponse httpResponse) {
+                        HttpServletResponse httpResponse, Model model) {
 
         try{
             Authentication authentication = authenticationManager.authenticate(
@@ -84,7 +84,8 @@ public class AuthPageController {
             // Zapewnienie utworzenia sesji i zapisania w niej kontekstu
             HttpSession session = httpRequest.getSession(true);
             session.setAttribute("SPRING_SECURITY_CONTEXT", securityContext);
-
+            User user = getUserID();
+            model.addAttribute("user", user);
             return "redirect:/home";
         }
         catch (Exception e){

@@ -62,8 +62,7 @@ public class UserController {
 
     @GetMapping("/trainer")
     public String getAddTrainerPage(Model model) {
-        User user = getUserID(); // get current user
-        model.addAttribute("user", user);               // for name display
+        addUserToModel(model);            // for name display
         model.addAttribute("trainer", new Trainer());   // for form binding
         return "become-trainer";
     }
@@ -75,7 +74,7 @@ public class UserController {
     @PostMapping("/trainer")
     public String addTrainer(@ModelAttribute Trainer trainer, Model model) {
         User user = getUserID();
-    
+        model.addAttribute("user", user);
         if (user.getTrainer() != null) {
             model.addAttribute("error", "User is already a trainer");
             return "error";
@@ -86,7 +85,6 @@ public class UserController {
         trainer.setId(null);
         trainer.setCourses(null);
         trainerService.createTrainer(trainer);
-        model.addAttribute("user", user);
     
         model.addAttribute("message", "User is now a Trainer");
         return "home";
@@ -96,6 +94,7 @@ public class UserController {
     // Pobieranie listy trenerów
     @GetMapping("/trainers")
     public String getAllTrainers(Model model) {
+        addUserToModel(model);
         List<Trainer> trainers = trainerService.getAll();
         if(!trainers.isEmpty()){
             List<TrainerDTO> trainersDTO = TrainerDTO.toDTO(trainers);
@@ -111,9 +110,10 @@ public class UserController {
 
         @GetMapping("/me")
         public String getCurrentUser(Model model) {
-            User user = getUserID();
+            addUserToModel(model);
+            /* User user = getUserID();
             UserDTO userDTO = new UserDTO(user);
-            model.addAttribute("user", userDTO);
+            model.addAttribute("user", userDTO); */
             return "about-me"; // Thymeleaf template
 
         }
@@ -129,6 +129,7 @@ public class UserController {
         @GetMapping("/workout")
         public String getAllUser_Workouts(Model model) {
             User user = getUserID();
+            model.addAttribute("user", user);
             List<User_Workouts> userWKOUT = user_workoutService.findByUser_Id(user.getId());
             if(!userWKOUT.isEmpty()){
                 List<WorkoutDTO> workoutDTOs = WorkoutDTO.toDTO(userWKOUT);
@@ -168,6 +169,7 @@ public class UserController {
             user_workoutService.createUser_Workouts(user_workouts);
 
             model.addAttribute("message", "Utworzono trening");
+            model.addAttribute("user", user);
             return "redirect:/users/workout"; // Redirect to the workouts page after creation
         }
 
@@ -191,6 +193,7 @@ public class UserController {
         @GetMapping("/trainingplan")
         public String getAllUser_Trainers(Model model) {
             User user = getUserID();
+            model.addAttribute("user", user);
             List<UserTrainingPlan> plan = userTrainingPlanService.findByUser_Id(user.getId());
 
             if(plan.isEmpty()){
@@ -242,5 +245,10 @@ public class UserController {
     private User getUserID() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         return userService.findUserByLogin(auth.getName());
+    }
+
+    private void addUserToModel(Model model) {
+        User user = getUserID();
+        model.addAttribute("user", user);
     }
 }

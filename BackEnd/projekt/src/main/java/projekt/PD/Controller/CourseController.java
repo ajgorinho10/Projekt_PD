@@ -46,6 +46,7 @@ public class CourseController {
         List<Course> courses = courseService.findAll();
         List<CourseDTO> courseDTOs = CourseDTO.toDTO(courses);
         model.addAttribute("courses", courseDTOs);
+        addUserToModel(model);
         return "all-courses"; // Thymeleaf template
     }
 
@@ -55,6 +56,7 @@ public class CourseController {
     @GetMapping("/{id}")
     public String showCourseDetails(@PathVariable Long id, Model model) {
         Optional<Course> course = courseService.findById(id);
+        addUserToModel(model);
         if (course.isPresent()) {
             CourseDTO courseDTO = new CourseDTO(course.get());
             model.addAttribute("course", courseDTO);
@@ -72,6 +74,7 @@ public String showTrainerCourses(Model model) {
     List<Course> courses = courseService.findByCourseTrainer_Id(user.getTrainer().getId());
     List<CourseDTO> dtos = CourseDTO.toDTO(courses);
     model.addAttribute("trainerCourses", dtos);
+    addUserToModel(model);
     return "trainer-courses";
 }
 
@@ -83,6 +86,7 @@ public String showTrainerCourses(Model model) {
     @PreAuthorize("hasRole('TRAINER')")
     public String showAddCourseForm(Model model) {
         model.addAttribute("course", new Course());
+        addUserToModel(model);
         return "add-course"; // Thymeleaf template
     }
 
@@ -130,6 +134,7 @@ public String showTrainerCourses(Model model) {
         List<Course> courses = courseService.findByUsers_Id(user.getId());
         List<CourseDTO> dtos = CourseDTO.toDTO(courses);
         model.addAttribute("myCourses", dtos);
+        addUserToModel(model);
         return "my-courses"; // Thymeleaf template
     }
 
@@ -183,5 +188,10 @@ public String addUser(@PathVariable Long id, RedirectAttributes redirectAttribut
     private User getUserID() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         return userService.findUserByLogin(auth.getName());
+    }
+
+    private void addUserToModel(Model model) {
+        User user = getUserID();
+        model.addAttribute("user", user);
     }
 }
