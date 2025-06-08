@@ -18,12 +18,15 @@
 
 <div class="container">
     <div class="card">
-        <h2>Dane użytkownika</h2>
+        <h2><span th:text="${user.firstName}"></span> <span th:text="${user.lastName}"></span></h2>
         <p><strong>ID:</strong> <span th:text="${user.id}"></span></p>
         <p><strong>Login:</strong> <span th:text="${user.login}"></span></p>
-        <p><strong>Imię:</strong> <span th:text="${user.firstName}"></span></p>
-        <p><strong>Nazwisko:</strong> <span th:text="${user.lastName}"></span></p>
-        <p><strong>Role:</strong> <span th:text="${user.roles}"></span></p>
+        <span th:switch="${user.roles}">
+            <p th:case="'ROLE_TRAINER'"><strong>Rola:</strong> Trener</p>
+            <p th:case="'ROLE_ADMIN'"><strong>Rola:</strong> Administrator</p>
+            <p th:case="'ROLE_MODERATOR'"><strong>Rola:</strong> Moderator</p>
+            <p th:case="*"><strong>Rola:</strong> Użytkownik</p>
+        </span>
 
     </div>
 </div>
