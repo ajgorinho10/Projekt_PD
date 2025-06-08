@@ -5,8 +5,7 @@ import lombok.AllArgsConstructor;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,10 +16,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import com.fasterxml.jackson.annotation.JsonCreator.Mode;
 
 import jakarta.annotation.security.RolesAllowed;
 import projekt.PD.DataBase.DB_Trainer.Trainer;
@@ -132,7 +129,7 @@ public class UserController {
         //          -- usunięcie treningu (DEL)
 
         @GetMapping("/workout")
-        public String getAllUser_Workouts(Model model) {
+        public String getThisUser_Workouts(Model model) {
             User user = getUserID();
             model.addAttribute("user", user);
             List<User_Workouts> userWKOUT = user_workoutService.findByUser_Id(user.getId());
@@ -147,19 +144,31 @@ public class UserController {
         }
 
         @GetMapping("/workout/{id}")
-        public ResponseEntity<?> getUser_Workouts(@PathVariable Long id) {
+        public String getUser_Workouts(@PathVariable Long id, Model model) {
             User user = getUserID();
             Optional<User_Workouts> uw = user_workoutService.findById(id, user.getId());
             if(uw.isPresent()){
-                return new ResponseEntity<>(new WorkoutDTO(uw.get()),HttpStatus.OK);
+                WorkoutDTO workoutDTO = new WorkoutDTO(uw.get());
+                model.addAttribute("workout", workoutDTO);
+                model.addAttribute("user", user);
+                return "user-workout-details"; // Thymeleaf template for displaying workout details
             }
 
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            model.addAttribute("error", "Workout not found");
+            return "user-workout-details"; // Redirect to the workouts page if not found
+        }
+
+
+        // forma do tworzenia treningu
+        @GetMapping("/workout/form")
+        public String showCreateWorkoutForm(Model model) {
+        model.addAttribute("workoutDTO", new WorkoutDTO());
+        return "create-workout"; // Thymeleaf template
         }
 
         // create workout 
         @PostMapping("/workout")
-        public String updateWorkout(@RequestBody WorkoutDTO workoutDTO, Model model) {
+        public String updateWorkout(@ModelAttribute WorkoutDTO workoutDTO, Model model) {
             User user = getUserID();
 
             User_Workouts user_workouts = new User_Workouts();
@@ -179,13 +188,15 @@ public class UserController {
         }
 
         @DeleteMapping("/workout/{id}")
-        public ResponseEntity<?> deleteWorkout(@PathVariable Long id) {
+        public String deleteWorkout(@PathVariable Long id, Model model) {
             User user = getUserID();
             if(user_workoutService.deleteById(id,user.getId())){
-                return new ResponseEntity<>("Workout deleted", HttpStatus.OK);
+                model.addAttribute("message", "Workout deleted successfully");
+                return "redirect:/users/workout"; // Redirect to the workouts page after deletion
             }
             else{
-                return new ResponseEntity<>("Workout not found", HttpStatus.NOT_FOUND);
+                model.addAttribute("error", "Something went wrong");
+                return "error"; // Redirect to an error page if the workout was not found
             }
         }
 
@@ -197,7 +208,7 @@ public class UserController {
         //          -- Usunięcie planów (DEL)
 
         @GetMapping("/trainingplan")
-        public String getAllUser_Trainers(Model model) {
+        public String getAllUser_s(Model model) {
 
             User user = getUserID();
             model.addAttribute("user", user);
@@ -217,35 +228,49 @@ public class UserController {
 
 
         @GetMapping("/trainingplan/{id}")
-        public ResponseEntity<?> getAllUser_Trainers(@PathVariable Long id) {
+        public String getAllUser_Trainers(@PathVariable Long id, Model model) {
             User user = getUserID();
             Optional<UserTrainingPlan> plan = userTrainingPlanService.findById(id,user.getId());
             if(plan.isPresent()){
                 UserTrainingPlanDTO planDTO = new UserTrainingPlanDTO(plan.get());
-                return new ResponseEntity<>(planDTO,HttpStatus.OK);
+                model.addAttribute("plan", planDTO);
+                model.addAttribute("user", user);
+                return "user-training-plan-details"; // Thymeleaf template for displaying training plan details
             }
 
 
-            return new ResponseEntity<>("No Training plan with this ID",HttpStatus.NOT_FOUND);
+            model.addAttribute("error", "Training plan not found");
+            return "user-training-plan-details"; // Redirect to the training plans page if not found
         }
 
+
+        @GetMapping("/trainingplan/form")
+        public String showCreateTrainingPlanForm(Model model) {
+            User user = getUserID();
+            model.addAttribute("user", user);
+            model.addAttribute("trainerPlanDTO", new TrainerPlanDTO());
+            return "create-training-plan";
+        }
+
+
         @PostMapping("/trainingplan")
-        public ResponseEntity<?> updateTrainingPlan(@RequestBody UserTrainingPlan plan) {
+        public String updateTrainingPlan(@ModelAttribute UserTrainingPlan plan) {
             User user = getUserID();
             plan.setUser(user);
             userTrainingPlanService.create_or_change(plan);
 
-            return new ResponseEntity<>("Training plan created", HttpStatus.CREATED);
+            return "redirect:/users/trainingplan"; // Redirect to the training plans page after creation
         }
 
         @DeleteMapping("/trainingplan/{id}")
-        public ResponseEntity<?> deleteTrainingPlan(@PathVariable Long id) {
+        public String deleteTrainingPlan(@PathVariable Long id, Model model) {
             User user = getUserID();
             if(userTrainingPlanService.deleteById(id,user.getId())){
-                return new ResponseEntity<>("Training plan removed", HttpStatus.OK);
+                model.addAttribute("message", "Training has been deleted");
+                return "redirect:/users/trainingplan"; // Redirect to the training plans page after deletion
             }
-
-            return new ResponseEntity<>("Training plan with id: "+id+ " not exist", HttpStatus.NOT_FOUND);
+            model.addAttribute("error", "There was a problem when deleting the training plan");
+           return "redirect:/users/trainingplan";
         }
 
 

@@ -12,7 +12,8 @@ import org.springframework.lang.Nullable;
 import projekt.PD.DataBase.DB_Trainer.Trainer;
 import projekt.PD.DataBase.DB_User.User;
 
-import java.util.Date;
+
+import java.time.LocalDateTime;
 
 @Data
 @Entity
@@ -27,7 +28,7 @@ public class User_Workouts {
 
     private String title;
     private String description;
-    private Date date;
+    private LocalDateTime date;
 
     @ManyToOne
     @JoinColumn(name = "users_id")

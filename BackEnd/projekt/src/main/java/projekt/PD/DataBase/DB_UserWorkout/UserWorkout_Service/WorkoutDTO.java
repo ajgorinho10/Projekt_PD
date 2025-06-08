@@ -8,7 +8,7 @@ import projekt.PD.DataBase.DB_User.User_Service.UserDTO;
 import projekt.PD.DataBase.DB_UserWorkout.User_Workouts;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -19,8 +19,7 @@ public class WorkoutDTO {
     private Long id;
     private String title;
     private String description;
-    private Date date;
-
+    private LocalDateTime date;
     public WorkoutDTO(User_Workouts workout) {
         this.id = workout.getId();
         this.title = workout.getTitle();

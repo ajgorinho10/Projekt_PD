@@ -25,9 +25,9 @@
                 <li th:each="workout : ${workouts}">
                     <p><strong>Tytuł:</strong> <span th:text="${workout.title}"></span></p>
                     <p><strong>Opis:</strong> <span th:text="${workout.description}"></span></p>
-                    <p><strong>Data:</strong> <span th:text="${#dates.format(workout.date, 'yyyy-MM-dd HH:mm')}"></span></p>
+                    <p><strong>Data:</strong> <span th:text="${#temporals.format(workout.date, 'yyyy-MM-dd HH:mm')}"></span></p>
 
-                    <form th:action="@{'/workout/' + ${workout.id}}" method="get">
+                    <form th:action="@{'/users/workout/' + ${workout.id}}" method="get">
                         <button type="submit">Zobacz szczegóły</button>
                     </form>
 
