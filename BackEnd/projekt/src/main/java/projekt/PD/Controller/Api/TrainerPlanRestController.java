@@ -91,7 +91,7 @@ public class TrainerPlanRestController {
 
     @PreAuthorize("hasRole('TRAINER')")
     @PostMapping("/trainer/{id}")
-    public ResponseEntity<?> createTrainerPlan(@RequestBody TrainerPlanDTO trainerPlanDTO,@PathVariable Long id) {
+    public ResponseEntity<?> createTrainerPlan(@ModelAttribute TrainerPlanDTO trainerPlanDTO,@PathVariable Long id) {
         User trainer = getUserID();
         User user = userService.findUserById(id);
 

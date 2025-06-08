@@ -26,6 +26,9 @@ import jakarta.annotation.security.RolesAllowed;
 import projekt.PD.DataBase.DB_Trainer.Trainer;
 import projekt.PD.DataBase.DB_Trainer.Trainer_Service.TrainerDTO;
 import projekt.PD.DataBase.DB_Trainer.Trainer_Service.TrainerService;
+import projekt.PD.DataBase.DB_TrainerPlan.TrainerPlan;
+import projekt.PD.DataBase.DB_TrainerPlan.TrainerPlan_Service.TrainerPlanDTO;
+import projekt.PD.DataBase.DB_TrainerPlan.TrainerPlan_Service.TrainerPlanService;
 import projekt.PD.DataBase.DB_User.User;
 import projekt.PD.DataBase.DB_User.User_Service.UserDTO;
 import projekt.PD.DataBase.DB_User.User_Service.UserService;
@@ -46,12 +49,14 @@ public class UserController {
     private final User_WorkoutService user_workoutService;
     private final TrainerService trainerService;
     private final UserTrainingPlanService userTrainingPlanService;
+    private final TrainerPlanService trainerPlanService;
 
-    public UserController(UserService userService, User_WorkoutService userWorkoutService, TrainerService trainerService, UserTrainingPlanService userTrainingPlanService) {
+    public UserController(UserService userService, User_WorkoutService userWorkoutService, TrainerService trainerService, UserTrainingPlanService userTrainingPlanService, TrainerPlanService trainerPlanService) {
         this.userService = userService;
         this.user_workoutService = userWorkoutService;
         this.trainerService = trainerService;
         this.userTrainingPlanService = userTrainingPlanService;
+        this.trainerPlanService = trainerPlanService;
     }
 
     // route /home został przeniesiony do AuthPageController
@@ -194,6 +199,7 @@ public class UserController {
         public String getAllUser_Trainers(Model model) {
             User user = getUserID();
             model.addAttribute("user", user);
+            model.addAttribute("trainerPlanDTO", new TrainerPlanDTO());
             List<UserTrainingPlan> plan = userTrainingPlanService.findByUser_Id(user.getId());
 
             if(plan.isEmpty()){
