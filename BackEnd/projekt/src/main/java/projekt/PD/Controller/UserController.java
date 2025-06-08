@@ -195,7 +195,7 @@ public class UserController {
         //          -- Pobranie wszystkich planów (GET)
         //          -- Utworzenie lub modyfikacja planów (POST)
         //          -- Usunięcie planów (DEL)
-        @GetMapping("/trainingplan")
+        /* @GetMapping("/trainingplan")
         public String getAllUser_Trainers(Model model) {
             User user = getUserID();
             model.addAttribute("user", user);
@@ -210,9 +210,29 @@ public class UserController {
             List<UserTrainingPlanDTO> planDTO = UserTrainingPlanDTO.toDTO(plan);
             model.addAttribute("plans", planDTO);
             return "user-training-plans"; // Thymeleaf template for displaying training plans
+        } */
+
+    @GetMapping("/trainingplan")
+    public String getAllUser_Trainers(Model model) {
+
+        User user = getUserID();
+        model.addAttribute("user", user);
+        model.addAttribute("trainerPlanDTO", new TrainerPlanDTO());
+
+        List<TrainerPlan> plans = trainerPlanService.findByTrainerPlanUser_Id(user.getId());
+
+        if (plans.isEmpty()) {
+            model.addAttribute("error", "No training plans found");
+            return "user-training-plans";
         }
 
-        @GetMapping("/trainingplan/{id}")
+        List<TrainerPlanDTO> planDTO = TrainerPlanDTO.toDTO(plans);
+        model.addAttribute("plans", planDTO);
+        return "user-training-plans";
+    }
+
+
+    @GetMapping("/trainingplan/{id}")
         public ResponseEntity<?> getAllUser_Trainers(@PathVariable Long id) {
             User user = getUserID();
             Optional<UserTrainingPlan> plan = userTrainingPlanService.findById(id,user.getId());

@@ -39,7 +39,8 @@
 
         <!-- createTrainerPlan -->
         <div th:if="${user.trainer != null}">
-            <form th:action="@{/trainer/{id}(id=${user.id})}" th:object="${trainerPlanDTO}" method="post">
+            <form th:action="@{/trainerPlan/trainer/{id}(id=${user.id})}" th:object="${trainerPlanDTO}" method="post">
+                <p><strong>Nowy plan</strong></p>
                 <label>Nazwa planu: </label>
                 <input type="text" id="title" th:field="*{title}" required><br>
                 <label>Opis planu: </label>
