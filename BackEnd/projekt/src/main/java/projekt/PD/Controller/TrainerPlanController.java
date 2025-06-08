@@ -1,5 +1,6 @@
 package projekt.PD.Controller;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -103,7 +104,9 @@ public class TrainerPlanController {
             trainerPlan.setTrainerPlanUser(user);
 
             if(trainerPlanService.create(trainerPlan)){
-                return new ResponseEntity<>(HttpStatus.CREATED);
+                return ResponseEntity.status(HttpStatus.FOUND)
+                        .header(HttpHeaders.LOCATION, "/users/trainingplan")
+                        .build();
             }
         }
 
@@ -121,7 +124,9 @@ public class TrainerPlanController {
 
         if(plan.isPresent()) {
             trainerPlanService.deleteById(plan.get().getId());
-            return new ResponseEntity<>(HttpStatus.OK);
+            return ResponseEntity.status(HttpStatus.FOUND)
+                    .header(HttpHeaders.LOCATION, "/users/trainingplan")
+                    .build();
         }
 
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);

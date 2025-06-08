@@ -32,6 +32,11 @@
                     <p><strong>Piątek:</strong> <span th:text="${plan.friday}"></span></p>
                     <p><strong>Sobota:</strong> <span th:text="${plan.saturday}"></span></p>
                     <p><strong>Niedziela:</strong> <span th:text="${plan.sunday}"></span></p>
+                    <button>Edytuj plan</button>
+                    <form method="post" th:action="@{/trainerPlan/trainer/{id}(id=${plan.id})}">
+                        <input type="hidden" name="_method" value="delete"/>
+                        <button type="submit">Usuń plan</button>
+                    </form>
                     <hr>
                 </li>
             </ul>
