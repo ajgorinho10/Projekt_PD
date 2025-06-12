@@ -3,7 +3,6 @@ package projekt.PD.Security.Auth.Controller;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import jakarta.validation.Valid;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import projekt.PD.DataBase.DB_User.User;
 import projekt.PD.DataBase.DB_User.User_Service.UserService;
 import projekt.PD.Security.Auth.AuthRegister;
-import projekt.PD.Security.Auth.AuthRequest;
 
 @Controller
 public class AuthPageController {
@@ -61,7 +59,7 @@ public class AuthPageController {
             model.addAttribute("registerMsg", "Registered Successfully.");
         }
 
-        return "login";
+        return "Auth/login";
     }
 
     @PostMapping("/performLogin")
@@ -86,10 +84,10 @@ public class AuthPageController {
             session.setAttribute("SPRING_SECURITY_CONTEXT", securityContext);
             User user = getUserID();
             model.addAttribute("user", user);
-            return "redirect:/home";
+            return "redirect:/User/Information/home";
         }
         catch (Exception e){
-            return "login";
+            return "Auth/login";
         }
 
     }
@@ -98,7 +96,7 @@ public class AuthPageController {
     public String registerPage(Model model) {
         model.addAttribute("authRegister", new AuthRegister());
 
-        return "register";
+        return "Auth/register";
     }
 
     @PostMapping("/register")
@@ -116,12 +114,12 @@ public class AuthPageController {
             }
 
             if(error) {
-                return "register";
+                return "Auth/register";
             }
             else{
                 User savedUser = userService.createUser(authRegister);
 
-                return "redirect:/login?registerMsg=true";
+                return "redirect:login?registerMsg=true";
             }
 
         }catch (Exception e){
@@ -133,17 +131,8 @@ public class AuthPageController {
                 model.addAttribute("errorMsg", e.getMessage());
             }
 
-            return "register";
+            return "Auth/register";
         }
-    }
-
-        // nie wiem gdzie to wsadzić aby /route strony głównej był normalny
-    @GetMapping("/home")
-    public String home(Model model) {
-        User user = getUserID();
-        model.addAttribute("user", user);
-
-        return "home";
     }
 
     @GetMapping("/")

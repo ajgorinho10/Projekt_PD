@@ -1,4 +1,4 @@
-package projekt.PD.Controller;
+package projekt.PD.Controller.TrainerPlan_Controller;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -13,12 +13,11 @@ import projekt.PD.DataBase.DB_TrainerPlan.TrainerPlan_Service.TrainerPlanService
 import projekt.PD.DataBase.DB_User.User;
 import projekt.PD.DataBase.DB_User.User_Service.UserService;
 
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/trainerPlan")
+@RequestMapping("/trainerPlan/trainer")
 public class TrainerPlanController {
 
     private final TrainerPlanService trainerPlanService;
