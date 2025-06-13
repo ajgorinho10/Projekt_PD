@@ -8,7 +8,7 @@ import java.util.Optional;
 public interface TrainerPlanService {
     Optional<TrainerPlan> findById(Long id);
     Optional<TrainerPlan> findByPlanTrainer_IdAndTrainerPlanUser_Id(Long trainerPlanId, Long userId);
-    Optional<TrainerPlan> findByIdAndTrainerPlanUser_Id(Long userId,Long trainerPlanUserId);
+    Optional<TrainerPlan> findByIdAndTrainerPlanUser_Id(Long Id,Long trainerPlanUserId);
     Optional<TrainerPlan> findByIdAndPlanTrainer_Id(Long id,Long trainerPlanId);
 
     List<TrainerPlan> findByPlanTrainer_Id(Long id);

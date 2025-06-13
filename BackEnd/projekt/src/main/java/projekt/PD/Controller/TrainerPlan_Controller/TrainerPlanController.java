@@ -92,7 +92,7 @@ public class TrainerPlanController {
         User user = currentUser.getUserID();
         model.addAttribute("user", user);
         assert user.getTrainer() != null;
-        Optional<TrainerPlan> plan = trainerPlanService.findByIdAndPlanTrainer_Id(user.getTrainer().getId(),id);
+        Optional<TrainerPlan> plan = trainerPlanService.findByIdAndPlanTrainer_Id(id,user.getTrainer().getId());
 
         if(plan.isPresent() && trainerPlanService.deleteById(plan.get().getId())) {
             model.addAttribute("msg","Usunięto plan");
