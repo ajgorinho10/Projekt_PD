@@ -1,7 +1,8 @@
-Do zrobienia:
-* Dokumentacja (już trochę jest)
-* Testy jednostkowe
-* Edycja planów treningowych od trenera i własnych użytkownika
-* Usuwanie treningów
-
-Jeśli bedzie czas można zadbać o stylistykę kodu, chodzi o to aby ładnie wyglądał ale to tylko dodatek
+##  Do Zrobienia
+- [ ] 📝 Dokumentacja (częściowo zrealizowana)
+- [ ] 🧪 Testy jednostkowe
+- [ ] ✏️ Edycja planów treningowych (trenera i użytkownika)
+- [ ] 🗑️ Usuwanie treningów
+      
+---
+*Dodatkowo, w miarę dostępnego czasu, planowana jest poprawa stylistyki kodu.*
