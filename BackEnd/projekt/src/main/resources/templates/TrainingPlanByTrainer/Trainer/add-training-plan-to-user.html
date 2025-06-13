@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Nowy Plan Treningowy dla użytkownika</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+
+<header>
+    <h1>Dodaj Plan Treningowy dla użytkownika</h1>
+</header>
+
+<div th:replace="base :: navigation"></div>
+
+<div class="container">
+    <div class="card">
+        <form th:action="@{/trainerplan/trainer/form}" th:object="${trainerPlanDTO}" method="post">
+            <label>Nazwa planu:</label>
+            <input type="text" th:field="*{title}" required><br>
+
+            <label>Opis planu:</label>
+            <input type="text" th:field="*{description}"><br>
+
+            <label>Poniedziałek:</label>
+            <input type="text" th:field="*{monday}"><br>
+
+            <label>Wtorek:</label>
+            <input type="text" th:field="*{tuesday}"><br>
+
+            <label>Środa:</label>
+            <input type="text" th:field="*{wednesday}"><br>
+
+            <label>Czwartek:</label>
+            <input type="text" th:field="*{thursday}"><br>
+
+            <label>Piątek:</label>
+            <input type="text" th:field="*{friday}"><br>
+
+            <label>Sobota:</label>
+            <input type="text" th:field="*{saturday}"><br>
+
+            <label>Niedziela:</label>
+            <input type="text" th:field="*{sunday}"><br>
+
+            <label>Id użytkownika:</label>
+            <input type="number" th:field="*{user.id}"><br>
+
+            <button type="submit">Zapisz plan</button>
+        </form>
+    </div>
+</div>
+
+<footer>
+    <p>&copy; 2025 Twoja Aplikacja Treningowa</p>
+</footer>
+
+</body>
+</html>

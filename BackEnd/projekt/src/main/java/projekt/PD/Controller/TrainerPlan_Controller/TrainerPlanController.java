@@ -7,28 +7,33 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import projekt.PD.DataBase.DB_TrainerPlan.TrainerPlan;
 import projekt.PD.DataBase.DB_TrainerPlan.TrainerPlan_Service.TrainerPlanDTO;
 import projekt.PD.DataBase.DB_TrainerPlan.TrainerPlan_Service.TrainerPlanService;
 import projekt.PD.DataBase.DB_User.User;
 import projekt.PD.DataBase.DB_User.User_Service.UserService;
-import org.springframework.ui.Model;
 import projekt.PD.Services.CurrentUser;
 
 import java.util.List;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("/trainerPlan/trainer")
+@RequestMapping("/trainerplan/trainer")
 public class TrainerPlanController {
 
     private final TrainerPlanService trainerPlanService;
     private final UserService userService;
+    private final CurrentUser currentUser;
 
-    public TrainerPlanController(TrainerPlanService trainerPlanService, UserService userService) {
+    public TrainerPlanController(TrainerPlanService trainerPlanService, UserService userService, CurrentUser currentUser) {
         this.trainerPlanService = trainerPlanService;
         this.userService = userService;
+        this.currentUser = currentUser;
+    }
+
+
     }
 
     @GetMapping("/user")
