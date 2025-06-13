@@ -34,7 +34,6 @@ public class TrainerPlanController {
     }
 
 
-    }
 
     @GetMapping("/user")
     public String getTrainerPlan(Model model) {
