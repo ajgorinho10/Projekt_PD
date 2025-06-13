@@ -78,9 +78,11 @@ public class UserWorkoutController {
      * @param model obiekt Springa służący do przekazywania danych do widoku
      * @return create-workout
      */
+    
     @GetMapping("/form")
     public String showCreateWorkoutForm(Model model) {
         model.addAttribute("workoutDTO", new WorkoutDTO());
+        model.addAttribute("user", currentUser.getUserID());
 
         return "WorkOut/User/create-workout"; // Thymeleaf template
     }

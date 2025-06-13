@@ -15,7 +15,11 @@
 
 <div class="container">
     <div class="card">
-        <form th:action="@{/trainingplan/user/form}" th:object="${trainerPlanDTO}" method="post">
+            <form th:action="@{/trainerPlan/trainer/trainer}" th:object="${trainerPlanDTO}" method="post">
+                
+            <label>ID odbiorcy planu:</label>
+            <input type="number" name="targetUserId" required><br>
+
             <label>Nazwa planu:</label>
             <input type="text" th:field="*{title}" required><br>
 
