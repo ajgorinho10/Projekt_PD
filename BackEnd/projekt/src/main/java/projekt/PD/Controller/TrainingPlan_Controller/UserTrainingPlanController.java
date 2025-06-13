@@ -82,6 +82,7 @@ public class UserTrainingPlanController {
     @PostMapping("/form")
     public String updateTrainingPlan(@ModelAttribute UserTrainingPlan plan,Model model) {
         User user = currentUser.getUserID();
+        model.addAttribute("user", user);
 
         plan.setUser(user);
         userTrainingPlanService.create_or_change(plan);

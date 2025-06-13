@@ -80,6 +80,8 @@ public class UserWorkoutController {
      */
     @GetMapping("/form")
     public String showCreateWorkoutForm(Model model) {
+        User user = currentUser.getUserID();
+        model.addAttribute("user", user);
         model.addAttribute("workoutDTO", new WorkoutDTO());
 
         return "WorkOut/User/create-workout"; // Thymeleaf template
