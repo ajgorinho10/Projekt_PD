@@ -27,7 +27,7 @@
                     <p><strong>Opis:</strong> <span th:text="${workout.description}"></span></p>
                     <p><strong>Data:</strong> <span th:text="${#temporals.format(workout.date, 'yyyy-MM-dd HH:mm')}"></span></p>
 
-                    <form th:action="@{'/users/workout/' + ${workout.id}}" method="get">
+                    <form th:action="@{'/workout/user/' + ${workout.id}}" method="get">
                         <button type="submit">Zobacz szczegóły</button>
                     </form>
 

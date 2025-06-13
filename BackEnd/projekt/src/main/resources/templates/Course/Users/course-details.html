@@ -28,9 +28,20 @@
             <strong>Specjalizacja:</strong> <span th:text="${course.courseTrainer.specialization}">Specjalizacja</span>
         </p>
 
-        <div class="actions">
-            <a th:href="@{/course/user/{id}(id=${course.id})}" class="btn">Dołącz do kursu</a>
-            <a th:href="@{/course/user/{id}(id=${course.id})}" class="btn">Opuść kurs</a>
+        <div th:if="${user.getTrainer() == null || !user.getTrainer().getId().equals(course.getCourseTrainer().getId())}">
+            <div class="actions" th:if="${!user.isUserExistInCourse(course.getId())}">
+                <!-- Dołącz do kursu (POST) -->
+                <form th:action="@{/course/user/{id}(id=${course.id})}" method="post" style="display:inline">
+                    <button type="submit" class="btn">Dołącz do kursu</button>
+                </form>
+            </div>
+
+            <div class="actions" th:if="${user.isUserExistInCourse(course.getId())}">
+                <form method="post" th:action="@{/course/user/{id}(id=${course.id})}">
+                    <input type="hidden" name="_method" value="delete"/>
+                    <button type="submit" class="btn">Opuść kurs</button>
+                </form>
+            </div>
         </div>
     </div>
 </div>

@@ -33,7 +33,7 @@
                     <p><strong>Sobota:</strong> <span th:text="${plan.saturday}"></span></p>
                     <p><strong>Niedziela:</strong> <span th:text="${plan.sunday}"></span></p>
                     <button>Edytuj plan</button>
-                    <form method="post" th:action="@{/trainerPlan/trainer/{id}(id=${plan.id})}">
+                    <form method="post" th:action="@{/trainingplan/user/{id}(id=${plan.getId()})}">
                         <input type="hidden" name="_method" value="delete"/>
                         <button type="submit">Usuń plan</button>
                     </form>
@@ -43,7 +43,7 @@
         </div>
 
 <div th:if="${user.trainer != null}">
-    <a th:href="@{/users/trainingplan/form}">
+    <a th:href="@{/trainingplan/user/form}">
         <button>Dodaj nowy plan treningowy</button>
     </a>
 </div>

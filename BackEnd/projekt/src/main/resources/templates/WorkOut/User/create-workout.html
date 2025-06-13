@@ -11,11 +11,11 @@
     <h1>Utwórz Nowy Trening</h1>
 </header>
 
-<!-- <div th:replace="base :: navigation"></div> -->
+ <div th:replace="base :: navigation"></div> 
 
 <div class="container">
     <div class="card">
-        <form th:action="@{/users/workout}" method="post" th:object="${workoutDTO}">
+        <form th:action="@{/workout/user/form}" method="post" th:object="${workoutDTO}">
             <label for="title">Tytuł:</label>
             <input type="text" id="title" name="title" th:field="*{title}" required />
 

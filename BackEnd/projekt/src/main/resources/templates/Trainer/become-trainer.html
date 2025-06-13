@@ -20,12 +20,13 @@
         <p><strong>Nazwisko:</strong> <span th:text="${user.lastName}"></span></p>
 
         <h2>Formularz zgłoszeniowy</h2>
-    <form th:action="@{/users/trainer}" method="post" th:object="${trainer}">
-        <label for="specialization">Specjalizacja:</label>
-        <input type="text" th:field="*{specialization}" placeholder="np. Siłownia, Fitness" required />
 
-        <button type="submit">Zostań trenerem</button>
-    </form>
+        <form th:action="@{/trainer/form}" method="post" th:object="${trainer}">
+            <label for="specialization">Specjalizacja:</label>
+            <input type="text"  id="specialization" th:field="*{specialization}" placeholder="np. Siłownia, Fitness" required />
+
+            <button type="submit">Zostań trenerem</button>
+        </form>
 
     </div>
 </div>
