@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Moje Plany Treningowe dla użytkowników</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+
+<header>
+    <h1>Moje Plany Treningowe dla użytkowników</h1>
+</header>
+
+<div th:replace="base :: navigation"></div>
+
+<div class="container">
+    <div class="card">
+
+        <div th:if="${msg != null}">
+            <p style="color: red;" th:text="${msg}">essa</p>
+        </div>
+
+        <div th:if="${plans != null}">
+            <ul>
+                <li th:each="plan : ${plans}">
+                    <h3 th:text="${plan.title}">Tytuł planu</h3>
+                    <p><strong>Opis:</strong> <span th:text="${plan.description}"></span></p>
+                    <p><strong>Poniedziałek:</strong> <span th:text="${plan.monday}"></span></p>
+                    <p><strong>Wtorek:</strong> <span th:text="${plan.tuesday}"></span></p>
+                    <p><strong>Środa:</strong> <span th:text="${plan.wednesday}"></span></p>
+                    <p><strong>Czwartek:</strong> <span th:text="${plan.thursday}"></span></p>
+                    <p><strong>Piątek:</strong> <span th:text="${plan.friday}"></span></p>
+                    <p><strong>Sobota:</strong> <span th:text="${plan.saturday}"></span></p>
+                    <p><strong>Niedziela:</strong> <span th:text="${plan.sunday}"></span></p>
+                    <h4>Użytkownik</h4>
+                    <p><strong>Imię:</strong> <span th:text="${plan.getUser().getFirstName()}"></span></p>
+                    <p><strong>Nazwisko:</strong> <span th:text="${plan.getUser().getLastName()}"></span></p>
+
+                    <form method="post" th:action="@{/trainerplan/trainer/{id}(id=${plan.getId()})}">
+                        <input type="hidden" name="_method" value="delete"/>
+                        <button type="submit">Usuń plan</button>
+                    </form>
+                    <hr>
+                </li>
+            </ul>
+        </div>
+
+        <div th:if="${user.trainer != null}">
+            <a th:href="@{/trainerplan/trainer/form}">
+                <button>Dodaj nowy plan treningowy dla użytkownika</button>
+            </a>
+        </div>
+
+
+    </div>
+</div>
+
+<footer>
+    <p>&copy; 2025 Twoja Aplikacja Treningowa</p>
+</footer>
+
+</body>
+</html>

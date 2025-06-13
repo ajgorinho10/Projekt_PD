@@ -1,12 +1,9 @@
 package projekt.PD.Security.PageExceptions;
 
-import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.http.HttpStatus;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import projekt.PD.Controller.UserController;
+import projekt.PD.Controller.User_Controller.UserController;
 import projekt.PD.Security.Auth.Controller.AuthPageController;
 
 @ControllerAdvice(assignableTypes = {AuthPageController.class, UserController.class})

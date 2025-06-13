@@ -16,7 +16,7 @@
 
 <div class="container">
     <div class="card">
-        <form th:action="@{/course/form}" th:object="${course}" method="post">
+        <form th:action="@{/course/trainer/form}" th:object="${course}" method="post">
             <label for="title">Nazwa kursu:</label><br>
             <input type="text" id="title" th:field="*{title}" required><br><br>
 
