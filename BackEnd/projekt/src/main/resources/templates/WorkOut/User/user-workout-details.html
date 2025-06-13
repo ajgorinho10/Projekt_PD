@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Szczegóły Treningu</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+
+<header>
+    <h1>Szczegóły Treningu</h1>
+</header>
+
+<div th:replace="base :: navigation"></div>
+
+<div class="container">
+    <div class="card">
+
+        <!-- Error message -->
+        <div th:if="${error != null}">
+            <p style="color: red;" th:text="${error}">Nie znaleziono treningu.</p>
+        </div>
+
+        <!-- Workout details -->
+        <div th:if="${workout != null}">
+            <p><strong>Tytuł:</strong> <span th:text="${workout.title}">Tytuł treningu</span></p>
+            <p><strong>Opis:</strong> <span th:text="${workout.description}">Opis treningu</span></p>
+            <p><strong>Data:</strong> <span th:text="${#temporals.format(workout.date, 'yyyy-MM-dd HH:mm')}">Data treningu</span></p>
+
+            <form method="post" th:action="@{/workout/user/{id}(id=${workout.getId()})}" style="display: inline-block; margin-left: 10px;">
+                <input type="hidden" name="_method" value="delete"/>
+                <button type="submit">Usuń plan</button>
+            </form>
+
+            <!-- Optional: Display user's name -->
+            <div th:if="${user != null}">
+                <p><strong>Użytkownik:</strong> <span th:text="${user.firstName + ' ' + user.lastName}">Imię i nazwisko</span></p>
+            </div>
+        </div>
+
+        <!-- Back to workouts button -->
+        <a th:href="@{/workout/user}">
+            <button>Wróć do listy treningów</button>
+        </a>
+
+    </div>
+</div>
+
+<footer>
+    <p>&copy; 2025 Twoja Aplikacja Treningowa</p>
+</footer>
+
+</body>
+</html>

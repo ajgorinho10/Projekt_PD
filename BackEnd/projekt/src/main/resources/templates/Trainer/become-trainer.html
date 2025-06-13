@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Zostań Trenerem</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+
+<header>
+    <h1>Zostań Trenerem</h1>
+</header>
+
+<div th:replace="base :: navigation"></div>
+
+<div class="container">
+    <div class="card">
+        <h2>Informacje o użytkowniku</h2>
+        <p><strong>Imię:</strong> <span th:text="${user.firstName}"></span></p>
+        <p><strong>Nazwisko:</strong> <span th:text="${user.lastName}"></span></p>
+
+        <h2>Formularz zgłoszeniowy</h2>
+
+        <form th:action="@{/trainer/form}" method="post" th:object="${trainer}">
+            <label for="specialization">Specjalizacja:</label>
+            <input type="text"  id="specialization" th:field="*{specialization}" placeholder="np. Siłownia, Fitness" required />
+
+            <button type="submit">Zostań trenerem</button>
+        </form>
+
+    </div>
+</div>
+
+<footer>
+    <p>&copy; 2025 Twoja Aplikacja Treningowa</p>
+</footer>
+
+</body>
+</html>

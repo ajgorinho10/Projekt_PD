@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista Trenerów</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+
+<header>
+    <h1>Lista dostępnych Trenerów</h1>
+</header>
+
+<div th:replace="base :: navigation"></div>
+
+<div class="container">
+    <div class="card">
+
+        <div th:if="${error != null}">
+            <p style="color: red;" th:text="${error}">Brak dostępnych trenerów.</p>
+        </div>
+
+        <div th:if="${trainers != null}">
+            <ul>
+                <li th:each="trainer : ${trainers}">
+                    <p><strong>ID:</strong> <span th:text="${trainer.id}"></span></p>
+                    <p><strong>Imię:</strong> <span th:text="${trainer.firstName}"></span></p>
+                    <p><strong>Nazwisko:</strong> <span th:text="${trainer.lastName}"></span></p>
+                    <p><strong>Specjalizacja:</strong> <span th:text="${trainer.specialization}"></span></p>
+                    <hr>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+</div>
+
+<footer>
+    <p>&copy; 2025 Twoja Aplikacja Treningowa</p>
+</footer>
+
+</body>
+</html>

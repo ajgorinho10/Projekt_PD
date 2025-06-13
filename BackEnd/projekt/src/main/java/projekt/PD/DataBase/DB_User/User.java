@@ -65,4 +65,14 @@ public class User{
     public Trainer getTrainer() {
         return this.trainer;
     }
+
+    public boolean isUserExistInCourse(Long courseId) {
+        for(Course course: userCourse){
+            if(course.getId()!=null && course.getId().equals(courseId)){
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

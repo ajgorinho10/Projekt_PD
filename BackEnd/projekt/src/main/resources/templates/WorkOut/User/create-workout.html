@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Nowy Trening</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+
+<header>
+    <h1>Utwórz Nowy Trening</h1>
+</header>
+
+ <div th:replace="base :: navigation"></div>
+
+<div class="container">
+    <div class="card">
+        <form th:action="@{/workout/user/form}" method="post" th:object="${workoutDTO}">
+            <label for="title">Tytuł:</label>
+            <input type="text" id="title" name="title" th:field="*{title}" required />
+
+            <label for="description">Opis:</label>
+            <textarea id="description" name="description" th:field="*{description}" required></textarea>
+
+            <label for="date">Data i Czas:</label>
+            <input type="datetime-local" id="date" th:field="*{date}" required />
+            
+
+           
+
+
+            <button type="submit">Zapisz Trening</button>
+        </form>
+    </div>
+</div>
+
+<footer>
+    <p>&copy; 2025 Twoja Aplikacja Treningowa</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Moje Plany Treningowe od trenera</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+
+<header>
+  <h1>Moje Plany Treningowe od trenera</h1>
+</header>
+
+<div th:replace="base :: navigation"></div>
+
+<div class="container">
+  <div class="card">
+
+    <div th:if="${error != null}">
+      <p style="color: red;" th:text="${error}">Brak dostępnych planów treningowych.</p>
+    </div>
+
+    <div th:if="${plans!=null}">
+      <ul>
+        <li th:each="plan : ${plans}" style="margin-bottom: 2em; border-bottom: 1px solid #ccc; padding-bottom: 1em;">
+
+          <h3 th:text="${plan.title}">Tytuł planu</h3>
+          <p><strong>Opis:</strong> <span th:text="${plan.description}"></span></p>
+          <p><strong>Poniedziałek:</strong> <span th:text="${plan.monday}"></span></p>
+          <p><strong>Wtorek:</strong> <span th:text="${plan.tuesday}"></span></p>
+          <p><strong>Środa:</strong> <span th:text="${plan.wednesday}"></span></p>
+          <p><strong>Czwartek:</strong> <span th:text="${plan.thursday}"></span></p>
+          <p><strong>Piątek:</strong> <span th:text="${plan.friday}"></span></p>
+          <p><strong>Sobota:</strong> <span th:text="${plan.saturday}"></span></p>
+          <p><strong>Niedziela:</strong> <span th:text="${plan.sunday}"></span></p>
+
+          <h4>Trener</h4>
+          <p><strong>Imię:</strong> <span th:text="${plan.getTrainer().getFirstName()}"></span></p>
+          <p><strong>Nazwisko:</strong> <span th:text="${plan.getTrainer().getLastName()}"></span></p>
+          <p><strong>Specjalizacja:</strong> <span th:text="${plan.getTrainer().getSpecialization()}"></span></p>
+
+          <a th:href="@{/trainingplan/edit/{id}(id=${plan.id})}"><button>Edytuj plan</button></a>
+
+          <form method="post" th:action="@{/trainerplan/user/{id}(id=${plan.id})}" style="display: inline-block; margin-left: 10px;">
+            <input type="hidden" name="_method" value="delete"/>
+            <button type="submit">Usuń plan</button>
+          </form>
+
+        </li>
+      </ul>
+    </div>
+
+    <div th:if="${#lists.isEmpty(plans)}">
+      <p>Nie masz jeszcze żadnych planów treningowych.</p>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  <p>&copy; 2025 Twoja Aplikacja Treningowa</p>
+</footer>
+
+</body>
+</html>

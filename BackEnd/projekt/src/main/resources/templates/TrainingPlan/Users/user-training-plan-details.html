@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Szczegóły Planu Treningowego</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+
+<header>
+    <h1>Szczegóły Planu Treningowego</h1>
+</header>
+
+<div th:replace="base :: navigation"></div>
+
+<div class="container">
+    <div class="card">
+
+        <!-- Error message -->
+        <div th:if="${error != null}">
+            <p style="color: red;" th:text="${error}">Plan treningowy nie został znaleziony.</p>
+        </div>
+
+        <!-- Training plan details -->
+        <div th:if="${plan != null}">
+            <p><strong>Tytuł:</strong> <span th:text="${plan.title}">Tytuł planu</span></p>
+            <p><strong>Opis:</strong> <span th:text="${plan.description}">Opis planu</span></p>
+
+            <h3>Plan tygodniowy</h3>
+            <ul>
+                <li><strong>Poniedziałek:</strong> <span th:text="${plan.monday}">Brak danych</span></li>
+                <li><strong>Wtorek:</strong> <span th:text="${plan.tuesday}">Brak danych</span></li>
+                <li><strong>Środa:</strong> <span th:text="${plan.wednesday}">Brak danych</span></li>
+                <li><strong>Czwartek:</strong> <span th:text="${plan.thursday}">Brak danych</span></li>
+                <li><strong>Piątek:</strong> <span th:text="${plan.friday}">Brak danych</span></li>
+                <li><strong>Sobota:</strong> <span th:text="${plan.saturday}">Brak danych</span></li>
+                <li><strong>Niedziela:</strong> <span th:text="${plan.sunday}">Brak danych</span></li>
+            </ul>
+
+            <!-- Optional: User info -->
+            <div th:if="${user != null}">
+                <p><strong>Użytkownik:</strong> <span th:text="${user.firstName + ' ' + user.lastName}">Imię i nazwisko</span></p>
+            </div>
+        </div>
+
+        <!-- Back to plans list -->
+        <a th:href="@{/trainingplan/user}">
+            <button>Wróć do planów</button>
+        </a>
+
+    </div>
+</div>
+
+<footer>
+    <p>&copy; 2025 Twoja Aplikacja Treningowa</p>
+</footer>
+
+</body>
+</html>

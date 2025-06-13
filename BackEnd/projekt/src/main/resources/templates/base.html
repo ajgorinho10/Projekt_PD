@@ -17,27 +17,6 @@
         <!-- First row of navigation -->
         <ul>
             <li><a th:href="@{/home}">Strona główna</a></li>
-<<<<<<< Updated upstream
-            <li><a th:href="@{/performLogout}">Wyloguj</a></li>
-        </ul>
-        <ul>
-            <li><a th:href="@{/course/all}">Wszystkie kursy</a></li>
-            <li><a th:href="@{/course/user}">Moje kursy</a></li>
-            <li><a th:href="@{/course/trainer}" th:if="${user.trainer != null}">Kursy trenera</a></li>
-            <li><a th:href="@{/course/form}" th:if="${user.trainer != null}">Dodaj kurs</a></li>
-        </ul>
-
-        <!-- Second row of navigation (new buttons) -->
-         
-        <ul>
-            <li><a th:href="@{/users/me}">Moje dane</a></li>
-            <li><a th:href="@{/users/workout}">Moje treningi</a></li>
-            <li><a th:href="@{/users/trainingplan}">Moje plany treningowe</a></li>
-            <li><a th:href="@{/users/trainers}">Lista trenerów</a></li>
-            <li><a th:href="@{/users/workout/form}"> Utwórz trening</a></li>
-            <li><a th:href="@{/users/trainer}" th:if="${user.trainer == null}">Zostań trenerem</a></li>
-            
-=======
             <li><a th:href="@{/me}">Moje dane</a></li>
             <li><a th:href="@{/course}">Wszystkie kursy</a></li>
             <li><a th:href="@{/course/user}">Moje kursy</a></li>
@@ -56,7 +35,6 @@
             <li><a th:href="@{/workout/user/form}"> Utwórz trening</a></li>
             <li><a th:href="@{/trainer/form}" th:if="${user.trainer == null}">Zostań trenerem</a></li>
             <li><a th:href="@{/performLogout}">Wyloguj</a></li>
->>>>>>> Stashed changes
         </ul>
         
     </nav>

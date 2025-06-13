@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Moje Kursy</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+
+<header>
+    <h1>Moje Kursy</h1>
+</header>
+
+<!-- Include base navigation -->
+<div th:replace="base :: navigation"></div> 
+
+<div class="container">
+    <div class="card">
+        <h2>Lista Kursów, do których jesteś zapisany</h2>
+
+        <div th:if="${myCourses.size() > 0}">
+            <ul>
+                <li th:each="course : ${myCourses}">
+                    <p>
+                        <strong>Tytuł:</strong> 
+                        <a th:href="@{/course/{id}(id=${course.id})}" th:text="${course.title}">Tytuł kursu</a><br>
+
+                        <strong>Liczba użytkowników zapisanych:</strong> 
+                        <span th:text="${course.countUsers}">0</span><br>
+
+                        <strong>Trener:</strong>
+                        <span th:text="${course.courseTrainer.firstName}">Imię</span>
+                        <span th:text="${course.courseTrainer.lastName}">Nazwisko</span>
+                        (<span th:text="${course.courseTrainer.specialization}">Specjalizacja</span>)
+                    </p>
+                    <!-- Opuść kurs (DELETE) -->
+                    <form method="post" th:action="@{/course/user/{id}(id=${course.id})}">
+                    <input type="hidden" name="_method" value="delete"/>
+                        <button type="submit" class="btn">Opuść kurs</button>
+                    </form>
+                    <hr>
+                </li>
+            </ul>
+        </div>
+
+        <div th:if="${myCourses.size() == 0}">
+            <p>Nie jesteś jeszcze zapisany na żaden kurs.</p>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <p>&copy; 2025 Twoja Aplikacja Treningowa</p>
+</footer>
+
+</body>
+</html>

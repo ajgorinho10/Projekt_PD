@@ -27,13 +27,13 @@ public class TrainerPlanServiceImpl implements TrainerPlanService {
     }
 
     @Override
-    public Optional<TrainerPlan> findByIdAndTrainerPlanUser_Id(Long trainerPlanId, Long userId) {
-        return trainerPlanRepository.findByIdAndTrainerPlanUser_Id(trainerPlanId, userId);
+    public Optional<TrainerPlan> findByIdAndTrainerPlanUser_Id(Long userId,Long trainerPlanId) {
+        return trainerPlanRepository.findByIdAndTrainerPlanUser_Id(userId,trainerPlanId);
     }
 
     @Override
-    public Optional<TrainerPlan> findByIdAndPlanTrainer_Id(Long trainerPlanId, Long id) {
-        return trainerPlanRepository.findByIdAndPlanTrainer_Id(trainerPlanId, id);
+    public Optional<TrainerPlan> findByIdAndPlanTrainer_Id(Long id,Long trainerPlanId) {
+        return trainerPlanRepository.findByIdAndPlanTrainer_Id(id,trainerPlanId);
     }
 
     @Override
