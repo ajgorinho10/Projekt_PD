@@ -15,7 +15,11 @@
 
 <div class="container">
     <div class="card">
+<<<<<<< Updated upstream:BackEnd/projekt/src/main/resources/templates/create-training-plan.html
         <form th:action="@{/users/trainingplan}" th:object="${trainerPlanDTO}" method="post">
+=======
+        <form th:action="@{/trainingplan/user/form}" th:object="${trainerPlanDTO}" method="post">
+>>>>>>> Stashed changes:BackEnd/projekt/src/main/resources/templates/TrainingPlan/Users/create-training-plan.html
             <label>Nazwa planu:</label>
             <input type="text" th:field="*{title}" required><br>
 
