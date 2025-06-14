@@ -32,6 +32,13 @@ public class UserTrainingPlanController {
     //          -- Utworzenie lub modyfikacja planów (POST)
     //          -- Usunięcie planów (DEL)
 
+
+    /**
+     * Obsługuje żądanie GET wyświetlające wszystkie plany treningowe przypisane do użytkownika, w przypadku braku planów wyświetla komunikat o błędzie
+     * 
+     * @param model obiekt Springa służący do przekazywania danych do widoku
+     * @return user-training-plans
+     */
     @GetMapping()
     public String getAllUser_s(Model model) {
 
@@ -49,6 +56,14 @@ public class UserTrainingPlanController {
         return "TrainingPlan/Users/user-training-plans";
     }
 
+
+    /**
+     * Obsługuje żądanie GET wyświetlające szczegóły planu treningowego, w przypadku nieznalezienia planu wyświetla komunikat o błędzie
+     *
+     * @param model obiekt Springa służący do przekazywania danych do widoku
+     * @param id identyfikator planu treningowego
+     * @return user-training-plan-details
+     */
 
     @GetMapping("/{id}")
     public String getAllUser_Trainers(@PathVariable Long id, Model model) {
@@ -69,6 +84,13 @@ public class UserTrainingPlanController {
     }
 
 
+    /**
+     * Obsługuje żądanie GET wyświetlające formę do tworzenia planu treningowego
+     * 
+     * @param model obiekt Springa służący do przekazywania danych do widoku
+     * @return create-training-plan
+     */
+
     @GetMapping("/form")
     public String showCreateTrainingPlanForm(Model model) {
         User user = currentUser.getUserID();
@@ -78,6 +100,14 @@ public class UserTrainingPlanController {
         return "TrainingPlan/Users/create-training-plan";
     }
 
+
+    /**
+     * Obsługuje żądanie POST przesyłające dane z formularza i tworzące lub modyfikujące plan treningowy
+     * 
+     * @param plan obiekt zawierający dane planu treningowego
+     * @param model obiekt Springa służący do przekazywania danych do widoku
+     * @redirect:/trainingplan/user - przekeierowanie na stronę podglądu planów treningowych
+     */
 
     @PostMapping("/form")
     public String updateTrainingPlan(@ModelAttribute UserTrainingPlan plan,Model model) {
@@ -89,6 +119,14 @@ public class UserTrainingPlanController {
 
         return "redirect:/trainingplan/user";
     }
+
+    /**
+     * Obsługuje żądanie DELETE usuwający dany plan treningowy
+     * 
+     * @param model obiekt Springa służący do przekazywania danych do widoku
+     * @param id identyfikator planu treningowego do usunięcia
+     * @redirect:/trainingplan/user - przekierowanie na stronę podglądu planów treningowych użytkownika
+     */
 
     @DeleteMapping("/{id}")
     public String deleteTrainingPlan(@PathVariable Long id, Model model) {

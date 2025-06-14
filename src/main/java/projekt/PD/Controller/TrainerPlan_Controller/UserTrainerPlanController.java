@@ -32,6 +32,13 @@ public class UserTrainerPlanController {
         this.currentUser = currentUser;
     }
 
+
+    /**
+     * Obsługuje żądanie GET wyświetlające wszystkie plany treningowe przypisane do użytkownika, w przuypadku braku planów wyświetla komunikat o błędzie
+     * 
+     * @param model obiekt Springa służący do przekazywania danych do widoku
+     * @return user-training-plan-from-trainer
+     */
     @GetMapping()
     public String getTrainerPlan(Model model) {
         User user = currentUser.getUserID();
@@ -49,6 +56,14 @@ public class UserTrainerPlanController {
         return "TrainingPlanByTrainer/User/user-training-plan-from-trainer";
     }
 
+
+    /**
+     * Obsługuje żądanie GET wyświetlające szczegóły planu treningowego przypisanego do użytkownika, w przypadku błędu wyświetla komunikat o o błędzie
+     * 
+     * @param model obiekt Springa służący do przekazywania danych do widoku
+     * @param id id planu treningowego do podglądu
+     * @return user-training-plan-from-trainer-details
+     */
     @GetMapping("/{id}")
     public String getUserTrainingPlan(@PathVariable Long id,Model model) {
         User user = currentUser.getUserID();
@@ -62,6 +77,14 @@ public class UserTrainerPlanController {
 
         return "TrainingPlanByTrainer/User/user-training-plan-from-trainer-details";
     }
+
+    /**
+     * Obsługuje żądanie DELETE usuwające plan treningowy przypisany do użytkownika, w przypadku błędu wyświetla komunikat o błędzie
+     * 
+     * @param model obiekt Springa służący do przekazywania danych do widoku
+     * @param id id planu treningowego do usunięcia
+     * @redirect:/trainerplan/user - przekierowanie na stronę podglądu planów treningowych użytkownika
+     */
 
     @DeleteMapping("/{id}")
     public String deleteUserTrainingPlan(@PathVariable Long id,Model model) {

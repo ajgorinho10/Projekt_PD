@@ -35,6 +35,13 @@ public class TrainerPlanController {
 
 
 
+    /**
+     * Obsługuje żądanie GET w celu wyświetlenia wszystkich treningów utworzonych przez trenera dla użytkowników
+     * 
+     * @param model obiekt Springa służący do przekazywania danych do widoku
+     * @return trainer-traning-plan
+     */
+
     @PreAuthorize("hasRole('TRAINER')")
     @GetMapping()
     public String getPlanTrainer(Model model) {
@@ -52,6 +59,14 @@ public class TrainerPlanController {
         return "TrainingPlanByTrainer/Trainer/trainer-traning-plan";
     }
 
+
+    /**
+     * Obsługuje żądanie GET w celu wyświetlenia formularza do tworzenia nowego planu treningowego dla użytkowników
+     * 
+     * @param model obiekt Springa służący do przekazywania danych do widoku
+     * @return add-training-plan-to-user
+     */
+
     @PreAuthorize("hasRole('TRAINER')")
     @GetMapping("/form")
     public String newTrainingPlanForUser(Model model) {
@@ -61,6 +76,15 @@ public class TrainerPlanController {
 
         return "TrainingPlanByTrainer/Trainer/add-training-plan-to-user";
     }
+
+    /**
+     * Obsługuje żądanie POST w celu przesłania danych z formularza i utworzenia nowego planu treningowego
+     * 
+     * @param model obiekt Springa służący do przekazywania danych do widoku
+     * @param trainerPlanDTO obiekt zawierający dane planu treningowego
+     * @return redirect:/trainerplan/trainer - przekierowanie na stronę podglądu planów treningowych trenera
+     */
+
 
     @PreAuthorize("hasRole('TRAINER')")
     @PostMapping("/form")
@@ -85,6 +109,15 @@ public class TrainerPlanController {
 
         return "TrainingPlanByTrainer/Trainer/add-training-plan-to-user";
     }
+
+
+    /**
+     * Obsługuje żądanie DELETE usuwające wybrany plan treningowy, w przupadku błędu wyświetla komunikat o błędzie
+     * 
+     * @param model obiekt Springa służący do przekazywania danych do widoku
+     * @param id id planu treningowego do usunięcia
+     * @return redirect:/trainerplan/trainer - przekierowanie na stronę podglądu planów treningowych trenera
+     */
 
     @PreAuthorize("hasRole('TRAINER')")
     @DeleteMapping("/{id}")
