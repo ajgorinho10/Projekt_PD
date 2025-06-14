@@ -18,6 +18,10 @@ import projekt.PD.Services.CurrentUser;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Klasa UserTrainerPlanController obsługuje żądania wyświetlania, usuwania planów treningowych przypisanych do użytkownika
+ */
+
 @Controller
 @RequestMapping("/trainerplan/user")
 public class UserTrainerPlanController {
@@ -34,7 +38,8 @@ public class UserTrainerPlanController {
 
 
     /**
-     * Obsługuje żądanie GET wyświetlające wszystkie plany treningowe przypisane do użytkownika, w przuypadku braku planów wyświetla komunikat o błędzie
+     * Obsługuje żądanie GET wyświetlające wszystkie plany treningowe przypisane do użytkownika, w przypadku braku
+     *  planów wyświetla komunikat o błędzie
      * 
      * @param model obiekt Springa służący do przekazywania danych do widoku
      * @return user-training-plan-from-trainer
@@ -58,7 +63,8 @@ public class UserTrainerPlanController {
 
 
     /**
-     * Obsługuje żądanie GET wyświetlające szczegóły planu treningowego przypisanego do użytkownika, w przypadku błędu wyświetla komunikat o o błędzie
+     * Obsługuje żądanie GET wyświetlające szczegóły planu treningowego przypisanego do użytkownika, w przypadku błędu
+     *  wyświetla komunikat o o błędzie
      * 
      * @param model obiekt Springa służący do przekazywania danych do widoku
      * @param id id planu treningowego do podglądu
@@ -79,7 +85,8 @@ public class UserTrainerPlanController {
     }
 
     /**
-     * Obsługuje żądanie DELETE usuwające plan treningowy przypisany do użytkownika, w przypadku błędu wyświetla komunikat o błędzie
+     * Obsługuje żądanie DELETE usuwające plan treningowy przypisany do użytkownika, w przypadku błędu wyświetla
+     *  komunikat o błędzie
      * 
      * @param model obiekt Springa służący do przekazywania danych do widoku
      * @param id id planu treningowego do usunięcia

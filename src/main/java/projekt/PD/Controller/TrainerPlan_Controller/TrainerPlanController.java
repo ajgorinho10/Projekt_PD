@@ -19,6 +19,11 @@ import projekt.PD.Services.CurrentUser;
 import java.util.List;
 import java.util.Optional;
 
+/*
+ * Klasa TrainerPlanController obsługuje żądania wyświetlania, tworzenia i usuwania planów
+ *  treningowych tworzonych przez trenera 
+ */
+
 @Controller
 @RequestMapping("/trainerplan/trainer")
 public class TrainerPlanController {

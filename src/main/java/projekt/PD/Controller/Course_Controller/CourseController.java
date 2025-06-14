@@ -23,6 +23,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+/*
+ * klasa CourseController obsługuje żądania wyświetlania kursów
+ */
+
+
 @Controller
 @RequestMapping("/course")
 public class CourseController {

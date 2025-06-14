@@ -16,6 +16,10 @@ import projekt.PD.Services.CurrentUser;
 
 import java.util.List;
 
+/**
+ * Klasa TrainerController obsługuje żądania wyświetlania listy trenerów i zostania trenerem
+ */
+
 @Controller
 @RequestMapping("/trainer")
 public class TrainerController {

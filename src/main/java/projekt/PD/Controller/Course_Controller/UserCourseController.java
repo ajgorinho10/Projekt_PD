@@ -16,6 +16,10 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+/*
+ * klasa UserCourseController obsługuje żądania wyświetlania, dodawania i usuwania użytkownika z/do kursu
+ */
+
 @Controller
 @RequestMapping("/course/user")
 public class UserCourseController {

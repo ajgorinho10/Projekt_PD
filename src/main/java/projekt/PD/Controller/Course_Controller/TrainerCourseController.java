@@ -18,6 +18,10 @@ import projekt.PD.Services.CurrentUser;
 import java.util.List;
 import java.util.Optional;
 
+/*
+ * klasa TrainerCouresController obsługuje żądania wyświetlania, dodawania i usuwania kursów
+ */
+
 @Controller
 @RequestMapping("/course/trainer")
 public class TrainerCourseController {
@@ -31,7 +35,7 @@ public class TrainerCourseController {
     }
 
     /**
-     * Obsługuje żdanie GET dodaje do modelu wszystkie kursy trenera
+     * Obsługuje żądanie GET dodaje do modelu wszystkie kursy trenera
      *
      * @param model obiekt Springa służący do przekazywania danych do widoku
      * @return trainer-courses

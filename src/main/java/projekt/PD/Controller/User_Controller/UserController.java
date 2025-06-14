@@ -31,6 +31,10 @@ import projekt.PD.DataBase.DB_UserWorkout.UserWorkout_Service.User_WorkoutServic
 import projekt.PD.DataBase.DB_UserWorkout.UserWorkout_Service.WorkoutDTO;
 import projekt.PD.Services.CurrentUser;
 
+
+/*
+ * Klasa UserController obsługuje żądania wyświetlania informacji o użytkowniku i wyświetlania strony głównej
+ */
 @Controller
 public class UserController {
 

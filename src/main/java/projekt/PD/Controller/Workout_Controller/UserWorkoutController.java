@@ -12,6 +12,10 @@ import projekt.PD.Services.CurrentUser;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Klasa UserWorkoutController obsługuje żądania wyświetlania, tworzenia i usuwania treningów użytkownika
+ */
+
 @Controller
 @RequestMapping("/workout/user")
 public class UserWorkoutController {
