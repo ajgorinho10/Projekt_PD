@@ -6,6 +6,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/*
+ * Klasa AuthRegister służy do przechowywania danych rejestracji użytkownika.
+ * @NotBlank - pole nie może być puste
+ * @Size określone przyjmowane długości
+ */
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

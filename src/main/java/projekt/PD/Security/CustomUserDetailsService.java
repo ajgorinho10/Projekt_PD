@@ -14,6 +14,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/*
+ * Klasa CustomUserDetailsService implementuje UserDetailsService i jest odpowiedzialna za
+ * ładowanie danych użytkownika na podstawie loginu z bazy danych.
+ */
+
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
@@ -23,6 +28,12 @@ public class CustomUserDetailsService implements UserDetailsService {
     public CustomUserDetailsService(@Lazy UserService userService) {
         this.userService = userService;
     }
+
+/*
+ * Metoda loadUserByUsername jest odpowiedzialna za pobieranie użytkownika z bazy danych i ustalenie jego roli
+ * na podstawie loginu. Jeśli użytkownik nie zostanie znaleziony, rzuca wyjątek UsernameNotFoundException.
+ * 
+ */
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

@@ -4,6 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/*
+ * Klasa AuthResponse polega na przechowywaniu odpowiedzi z serwera po próbie logowania.
+ * Zawiera informacje o powodzeniu operacji, wiadomość oraz token uwierzytelniający.
+ */
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

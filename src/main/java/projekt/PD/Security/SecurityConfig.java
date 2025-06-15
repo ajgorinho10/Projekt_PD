@@ -23,6 +23,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.filter.HiddenHttpMethodFilter;
 
+/*
+ * Klasa SecurityConfig jest odpowiedzialna za konfigurację bezpieczeństwa aplikacji.
+ */
+
 @EnableWebSecurity
 @EnableMethodSecurity(
         securedEnabled = true,
@@ -40,6 +44,13 @@ public class SecurityConfig {
         filterRegistrationBean.addUrlPatterns("/*");
         return filterRegistrationBean;
     }
+
+/*
+ * SecurityFilterChain jest odpowiedzialny za konfigurację filtrów bezpieczeństwa w aplikacji.
+ * Definiowane są tu reguły dotyczące autoryzacji, logowania, wylogowywania i zarządzania sesjami.
+ * 
+ */
+
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -100,6 +111,11 @@ public class SecurityConfig {
         return new HttpSessionSecurityContextRepository();
     }
 
+
+    /*
+     * RoleHierarchy jest używany do definiowania hierarchii ról w aplikacji.
+     * Dzięki temu, jeśli użytkownik ma rolę nadrzędną, automatycznie zyskuje dostęp do ról podrzędnych.
+     */
     @Bean
     public RoleHierarchy roleHierarchy() {
         RoleHierarchyImpl hierarchy = new RoleHierarchyImpl();
@@ -119,6 +135,11 @@ public class SecurityConfig {
         return authConfig.getAuthenticationManager();
     }
 
+
+    /*
+     * DaoAuthenticationProvider jest odpowiedzialny za uwierzytelnianie użytkowników na podstawie danych przechowywanych w bazie danych.
+     * Używa UserDetailsService do pobierania informacji o użytkownikach i PasswordEncoder do porównywania haseł.
+     */
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();

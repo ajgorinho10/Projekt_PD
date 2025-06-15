@@ -20,6 +20,11 @@ import projekt.PD.Security.RestExceptions.Exceptions.LoginAlreadyExistException;
 import javax.security.auth.login.LoginException;
 import java.util.Objects;
 
+/*
+ * Klasa GlobalExceptionHandler jest odpowiedzialna za obsługę opisanych wyjątków w aplikacji.
+ * 
+ */
+
 @RestControllerAdvice(assignableTypes = {
         AuthRestController.class,
         UserRestController.class,
@@ -27,6 +32,7 @@ import java.util.Objects;
         TrainerPlanRestController.class
 })
 public class GlobalExceptionHandler {
+
 
     @ExceptionHandler(LoginAlreadyExistException.class)
     public ProblemDetail handleLoginException(LoginAlreadyExistException exception) {
@@ -36,6 +42,8 @@ public class GlobalExceptionHandler {
         return errorDetail;
     }
 
+
+
     @ExceptionHandler(InvalidLoginOrPasswordException.class)
     public ProblemDetail handleInvalidLoginOrPasswordException(InvalidLoginOrPasswordException exception) {
         ProblemDetail errorDetail = null;
@@ -43,6 +51,7 @@ public class GlobalExceptionHandler {
         errorDetail.setProperty("description", "login or password");
         return errorDetail;
     }
+
 
     @ExceptionHandler(AuthorizationDeniedException.class)
     public ProblemDetail handleAuthorizationDeniedException(AuthorizationDeniedException exception) {

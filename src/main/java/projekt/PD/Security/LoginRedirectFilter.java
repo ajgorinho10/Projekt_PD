@@ -12,6 +12,11 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+/*
+ * Klasa LoginRedirectFilter jest odpowiedzialna za przekierowanie użytkownika
+ * na stronę główną, jeśli jest zalogowany i próbuje uzyskać dostęp do strony logowania lub rejestracji.
+ */
+
 @Component
 public class LoginRedirectFilter extends OncePerRequestFilter {
     @Override

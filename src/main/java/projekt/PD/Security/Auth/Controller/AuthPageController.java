@@ -17,6 +17,10 @@ import projekt.PD.DataBase.DB_User.User;
 import projekt.PD.DataBase.DB_User.User_Service.UserService;
 import projekt.PD.Security.Auth.AuthRegister;
 
+/*
+ * Klasa AuthPageController obsługuje żądania związane z autoryzacją użytkowników,
+ */
+
 @Controller
 public class AuthPageController {
 
@@ -29,6 +33,11 @@ public class AuthPageController {
         this.securityContextRepository = securityContextRepository;
         this.userService = userService;
     }
+
+    /*
+     * Metoda login obsługuje żądanie GET dla strony logowania.
+     * Przyjmuje opcjonalne parametry błędu, wylogowania, błędu TOTP, nazwy użytkownika i komunikatu rejestracji.
+     */
 
     @GetMapping("/login")
     public String login(@RequestParam(value = "error", required = false) String error,
@@ -62,6 +71,12 @@ public class AuthPageController {
         return "Auth/login";
     }
 
+    /*
+     * Metoda performLogin obsługuje żądanie POST dla logowania użytkownika.
+     * Przyjmuje dane logowania i próbuje uwierzytelnić użytkownika.
+     * W przypadku sukcesu przekierowuje do strony głównej użytkownika, w przeciwnym razie zwraca stronę logowania.
+     */
+
     @PostMapping("/performLogin")
     public String performLogin(@ModelAttribute String username,
                         @ModelAttribute String password,
@@ -92,12 +107,23 @@ public class AuthPageController {
 
     }
 
+    /*
+     * Metoda registerPage obsługuje żądanie GET dla strony rejestracji.
+     */
+
     @GetMapping("/register")
     public String registerPage(Model model) {
         model.addAttribute("authRegister", new AuthRegister());
 
         return "Auth/register";
     }
+
+    /*
+     * Metoda register obsługuje żądanie POST dla rejestracji użytkownika.
+     * Przyjmuje dane rejestracyjne i próbuje utworzyć nowego użytkownika.
+     * W przypadku sukcesu przekierowuje do strony logowania z komunikatem o rejestracji,
+     * w przeciwnym razie zwraca stronę rejestracji z odpowiednimi błędami.
+     */
 
     @PostMapping("/register")
     public String register(@ModelAttribute AuthRegister authRegister, Model model, BindingResult result) {
@@ -134,6 +160,10 @@ public class AuthPageController {
             return "Auth/register";
         }
     }
+
+    /*
+     * Metoda index obsługuke żądanie GET dla strony głównej
+     */
 
     @GetMapping("/")
     public String index(Model model){

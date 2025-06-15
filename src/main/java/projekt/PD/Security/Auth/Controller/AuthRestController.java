@@ -20,6 +20,12 @@ import projekt.PD.Security.Auth.AuthRequest;
 import projekt.PD.Security.Auth.AuthResponse;
 import projekt.PD.Security.RestExceptions.Exceptions.InvalidLoginOrPasswordException;
 
+/**
+ * Klasa AuthRestController obsługuje żądania związane z autoryzacją użytkowników,
+ * w tym logowanie, rejestrację i wylogowanie.
+ * Klasa ta jest oznaczona jako @RestController, oznacza to, że nie jest to kontroler dostępny z poziomu przeglądarki
+ */
+
 @RestController
 @RequestMapping("/api")
 public class AuthRestController {
@@ -33,6 +39,13 @@ public class AuthRestController {
         this.securityContextRepository = securityContextRepository;
         this.userService = userService;
     }
+
+    /*
+     * Metoda login obsługuje żądanie POST dla logowania użytkownika.
+     * param @HttpRequest - obiekt HttpServletRequest, który zawiera informacje o żądaniu HTTP.
+     * param @HttpResponse - obiekt HttpServletResponse, który umożliwia ustawienie ciasteczek i nagłówków odpowiedzi.
+     * param @RequestBody - obiekt AuthRequest, który zawiera dane logowania użytkownika (login i hasło).
+     */
 
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest input,
@@ -71,6 +84,12 @@ public class AuthRestController {
         }
 
     }
+
+    /*
+     * Metoda registerPage obsługuje żądanie GET dla strony rejestracji.
+     * param @Valid - dane rejestracyjne są walidowane
+     * param @RequestBody - obiekt AuthRegister, który zawiera dane rejestracyjne użytkownika (login i hasło).
+     */
 
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(@Valid @RequestBody AuthRegister input){

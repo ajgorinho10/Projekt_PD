@@ -6,6 +6,11 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import projekt.PD.Controller.User_Controller.UserController;
 import projekt.PD.Security.Auth.Controller.AuthPageController;
 
+/*
+ * Klasa GlobalPageExceptionHandler jest odpowiedzialna za obsługę wyjątków
+ * Dodaje informacje o statusie, błędzie i ścieżce, w której wystąpił błąd
+ */
+
 @ControllerAdvice(assignableTypes = {AuthPageController.class, UserController.class})
 public class GlobalPageExceptionHandler {
 
