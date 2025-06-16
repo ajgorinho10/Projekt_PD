@@ -9,6 +9,8 @@ import projekt.PD.Security.RestExceptions.Exceptions.LoginAlreadyExistException;
 
 import java.util.List;
 
+/** Implementacja metod związanych z zarządzaniem użytkownikami */
+
 @Service
 public class UserServiceImpl implements UserService {
 

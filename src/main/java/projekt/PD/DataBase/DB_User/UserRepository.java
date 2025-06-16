@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
+/** Interfejs związanych z tabelą users zapytań do bazy danych */
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {

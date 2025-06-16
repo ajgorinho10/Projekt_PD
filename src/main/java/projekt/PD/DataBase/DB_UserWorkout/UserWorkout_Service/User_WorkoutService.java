@@ -5,6 +5,8 @@ import projekt.PD.DataBase.DB_UserWorkout.User_Workouts;
 import java.util.List;
 import java.util.Optional;
 
+/** Interfejs metod związanych z zarządzaniem treningami */
+
 public interface User_WorkoutService {
     List<User_Workouts> findByUser_Id(Long id);
     Optional<User_Workouts> findById(Long id, Long user_id);

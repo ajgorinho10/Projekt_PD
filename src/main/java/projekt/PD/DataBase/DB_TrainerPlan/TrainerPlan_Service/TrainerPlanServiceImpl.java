@@ -7,6 +7,8 @@ import projekt.PD.DataBase.DB_TrainerPlan.TrainerPlanRepository;
 import java.util.List;
 import java.util.Optional;
 
+/** Implementacja metod związanych z zarządzaniem planami treningowymi od trenerów */
+
 @Service
 public class TrainerPlanServiceImpl implements TrainerPlanService {
 

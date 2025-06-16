@@ -13,7 +13,7 @@ import projekt.PD.DataBase.PD_Course.Course;
 
 import java.util.List;
 
-
+/** Klasa reprezentująca konto o roli ROLE_TRAINER */
 @Data
 @Entity
 @Table(name = "\"trainers\"")

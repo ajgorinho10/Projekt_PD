@@ -12,6 +12,10 @@ import projekt.PD.DataBase.DB_User.User_Service.UserDTO;
 import java.util.ArrayList;
 import java.util.List;
 
+/** Klasa odpowiada za pobieranie danych planu treningowego od trenera
+ * i mapowaniu ich na obiekt TrainerPlan
+ * **/
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

@@ -15,6 +15,8 @@ import projekt.PD.DataBase.DB_User.User;
 
 import java.time.LocalDateTime;
 
+/** Klasa reprezentująca pojedynczy trening */
+
 @Data
 @Entity
 @Table(name = "\"user_workout\"")

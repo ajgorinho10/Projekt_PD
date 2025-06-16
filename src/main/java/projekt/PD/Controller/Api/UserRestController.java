@@ -25,6 +25,8 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/users")
 
+/** Kontroler Rest API do obsługi żądań związanych z aktualnie zalogowanym użytkownikiem */
+
 public class UserRestController {
 
     private final UserService userService;

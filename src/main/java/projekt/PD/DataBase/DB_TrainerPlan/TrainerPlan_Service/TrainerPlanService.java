@@ -5,6 +5,8 @@ import projekt.PD.DataBase.DB_TrainerPlan.TrainerPlan;
 import java.util.List;
 import java.util.Optional;
 
+/** Interfejs metod związanych z zarządzaniem planami treningowymi od trenerów */
+
 public interface TrainerPlanService {
     Optional<TrainerPlan> findById(Long id);
     Optional<TrainerPlan> findByPlanTrainer_IdAndTrainerPlanUser_Id(Long trainerPlanId, Long userId);

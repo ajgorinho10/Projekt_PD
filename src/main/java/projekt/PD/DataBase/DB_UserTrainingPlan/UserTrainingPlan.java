@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.lang.Nullable;
 import projekt.PD.DataBase.DB_User.User;
 
+/** Klasa reprezentująca pojedynczy plan treningowy użytkownika*/
 
 @Data
 @Entity

@@ -4,6 +4,8 @@ import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
 
+/** Klasa pomocnicza do struktryzowania odpowiedzi serwera HTTP */
+
 public class ResponseMSG<T> {
     public int status;
     public String message;

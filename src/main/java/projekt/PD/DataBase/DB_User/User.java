@@ -13,6 +13,8 @@ import projekt.PD.DataBase.PD_Course.Course;
 
 import java.util.*;
 
+/** Klasa reprezentująca pojedncze konto użytkownika aplikacji */
+
 @Entity
 @Table(name = "\"users\"")
 @Data

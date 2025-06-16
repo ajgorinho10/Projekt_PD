@@ -7,6 +7,8 @@ import projekt.PD.DataBase.DB_Trainer.TrainerRepository;
 import java.util.List;
 import java.util.Optional;
 
+/** Implementacja metod związanych z zarządzaniem kontami trenerów */
+
 @Service
 public class TrainerServiceImpl implements TrainerService {
 

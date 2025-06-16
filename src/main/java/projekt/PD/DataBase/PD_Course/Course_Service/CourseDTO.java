@@ -11,6 +11,9 @@ import projekt.PD.DataBase.PD_Course.Course;
 import java.util.ArrayList;
 import java.util.List;
 
+/** Klasa odpowiada za pobieranie danych pojedynczego kursu
+ * i mapowaniu ich na obiekt Course **/
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

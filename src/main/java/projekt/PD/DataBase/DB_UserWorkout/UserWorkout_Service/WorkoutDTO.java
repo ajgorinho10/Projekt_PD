@@ -11,6 +11,9 @@ import java.util.ArrayList;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/** Klasa odpowiada za pobieranie danych pojedynczego treningu
+ * i mapowaniu ich na obiekt Workout **/
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

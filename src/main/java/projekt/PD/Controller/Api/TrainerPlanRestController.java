@@ -15,6 +15,8 @@ import projekt.PD.DataBase.DB_User.User_Service.UserService;
 import java.util.List;
 import java.util.Optional;
 
+/** Kontroler Rest API do obsługi żądań związanych z zarządzaniem planami treningowymi */
+
 @RestController
 @RequestMapping("/api/trainerPlan")
 public class TrainerPlanRestController {

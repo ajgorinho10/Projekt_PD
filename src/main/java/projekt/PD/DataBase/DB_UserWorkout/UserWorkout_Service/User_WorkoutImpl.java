@@ -8,6 +8,8 @@ import projekt.PD.DataBase.DB_UserWorkout.User_WorkoutsRepository;
 import java.util.List;
 import java.util.Optional;
 
+/** Implementacja metod związanych z zarządzaniem treningami użytkowników */
+
 @Service
 public class User_WorkoutImpl implements User_WorkoutService {
 

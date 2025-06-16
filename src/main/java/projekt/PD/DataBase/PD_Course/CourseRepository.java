@@ -6,6 +6,8 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.List;
 import java.util.Optional;
 
+/** Interfejs związanych z tabelą users zapytań do bazy danych */
+
 public interface CourseRepository extends CrudRepository<Course, Long> {
     Optional<Course> findById(Long id);
     Optional<Course> findByCourseTrainer_IdAndId(Long courseId, Long trainerId);

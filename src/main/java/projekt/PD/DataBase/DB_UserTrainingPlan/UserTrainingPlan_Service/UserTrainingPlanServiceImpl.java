@@ -7,6 +7,8 @@ import projekt.PD.DataBase.DB_UserTrainingPlan.UserTrainingPlanRepository;
 import java.util.List;
 import java.util.Optional;
 
+/** Implementacja metod związanych z zarządzaniem planami treningowymi użytkowników */
+
 @Service
 public class UserTrainingPlanServiceImpl implements UserTrainingPlanService {
 

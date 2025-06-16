@@ -11,6 +11,8 @@ import projekt.PD.DataBase.DB_UserWorkout.UserWorkout_Service.WorkoutDTO;
 import java.util.ArrayList;
 import java.util.List;
 
+/** Klasa odpowiada za pobieranie danych trenera i mapowaniu ich na obiekt Trainer **/
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

@@ -5,6 +5,8 @@ import projekt.PD.DataBase.DB_UserTrainingPlan.UserTrainingPlan;
 import java.util.List;
 import java.util.Optional;
 
+/** Interfejs metod związanych z zarządzaniem planami treningowymi użytkowników */
+
 public interface UserTrainingPlanService {
     Optional<UserTrainingPlan> findById(Long id,Long userId);
     List<UserTrainingPlan> findByUser_Id(Long id);

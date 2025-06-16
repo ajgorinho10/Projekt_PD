@@ -5,6 +5,8 @@ import projekt.PD.DataBase.PD_Course.Course;
 import java.util.List;
 import java.util.Optional;
 
+/** Interfejs metod związanych z zarządzaniem kursami */
+
 public interface CourseService {
     Optional<Course> findById(Long id);
     Optional<Course> findByCourseTrainer_IdAndId(Long courseId, Long trainerId);

@@ -8,6 +8,8 @@ import org.springframework.lang.NonNullApi;
 import java.util.List;
 import java.util.Optional;
 
+/** Interfejs związanych z tabelą trainers zapytań do bazy danych */
+
 public interface TrainerRepository extends JpaRepository<Trainer, Long> {
     Trainer findBySpecialization(String specialization);
     Optional<Trainer> findById( Long id);

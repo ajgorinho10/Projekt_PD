@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/** Klasa odpowiada za pobieranie danych użytkownika i mapowaniu ich na obiekt User **/
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

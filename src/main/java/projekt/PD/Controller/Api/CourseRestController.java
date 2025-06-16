@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+/** Kontroler Rest API do obsługi żądań związanych z zarządzaniem kursami */
+
 @RestController
 @RequestMapping("/api/course")
 public class CourseRestController {

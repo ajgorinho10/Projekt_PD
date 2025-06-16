@@ -7,6 +7,8 @@ import projekt.PD.DataBase.PD_Course.CourseRepository;
 import java.util.List;
 import java.util.Optional;
 
+/** Implementacja metod związanych z zarządzaniem kursami */
+
 @Service
 public class CourseServiceImpl implements CourseService {
     private final CourseRepository courseRepository;

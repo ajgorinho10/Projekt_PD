@@ -5,6 +5,8 @@ import projekt.PD.Security.Auth.AuthRegister;
 
 import java.util.List;
 
+/** Interfejs metod związanych z zarządzaniem użytkownikami */
+
 public interface UserService {
 
     List<User> getAllUsers();

@@ -14,6 +14,8 @@ import projekt.PD.DataBase.DB_User.User;
 import java.util.ArrayList;
 import java.util.List;
 
+/** Klasa reprezentująca pojednczy kurs od trenera */
+
 @Data
 @Entity
 @AllArgsConstructor

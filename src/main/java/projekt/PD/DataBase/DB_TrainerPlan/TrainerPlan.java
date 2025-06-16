@@ -13,7 +13,8 @@ import projekt.PD.DataBase.PD_Course.Course;
 
 import java.util.ArrayList;
 import java.util.List;
-
+/** Klasa reprezentująca pojedynczy plan treningowy założony przez trenera
+ */
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
