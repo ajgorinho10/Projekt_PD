@@ -1,9 +1,9 @@
 package projekt.PD.DataBase.DB_User;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Value;
 import org.springframework.lang.Nullable;
 import projekt.PD.DataBase.DB_Trainer.Trainer;
 import projekt.PD.DataBase.DB_TrainerPlan.TrainerPlan;
@@ -39,6 +39,16 @@ public class User{
 
     @Column(nullable = false)
     private String lastName;
+
+    @Column()
+    private boolean mfaEnabled = false;
+
+    @Column()
+    @Nullable
+    private String mfaSecret;
+
+    @Column()
+    private boolean mfaVerified = false;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonManagedReference

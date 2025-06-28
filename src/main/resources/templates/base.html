@@ -27,6 +27,7 @@
         </ul>
 
         <ul>
+            <li><a th:href="@{/totp-setup}">Ustaw Totp</a></li>
             <li><a th:href="@{/trainer}">Lista trenerów</a></li>
             <li><a th:href="@{/trainingplan/user/form}">Stwórz plan treningowy</a></li>
             <li><a th:href="@{/trainerplan/trainer/form}" th:if="${user.trainer != null}">Stwórz plan treningowy dla użytkownika</a></li>

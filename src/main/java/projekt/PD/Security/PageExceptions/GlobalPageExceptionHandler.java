@@ -22,4 +22,5 @@ public class GlobalPageExceptionHandler {
         model.addAttribute("path", "nieznany");
         return "error";
     }
+
 }

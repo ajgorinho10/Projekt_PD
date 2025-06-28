@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Configuring Two-Factor Authentication</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}"/>
+</head>
+<body>
+
+<div th:replace="base :: navigation"></div>
+
+<div class="container">
+  <div class="card">
+
+    <h2>Configuring Two-Factor Authentication</h2>
+
+
+    <div class="qr-code-container" th:if="${qrCodeImage != null}">
+      <img th:src="${qrCodeImage}" alt="QR code for TOTP"/>
+    </div>
+
+    <div class="manual-setup">
+      <p>If you can't scan the QR code, please enter the following secret manually:</p>
+      <code th:text="${mfaSecret}"></code>
+    </div>
+
+    <div th:if="${param.error}" class="error-message">
+      <p>Invalid verification code. Please try again.</p>
+    </div>
+
+    <div th:if="${msg}" class="error-message">
+      <p th:text="${msg}"></p>
+    </div>
+
+    <div th:if="${TotpEnabled == false}">
+      <form th:action="@{/totp-setup}" method="post">
+
+        <div class="form-group">
+          <label for="totpCode">Kod weryfikacyjny:</label>
+          <input type="text" id="totpCode" name="totpCode" required maxlength="6" pattern="[0-9]{6}"/>
+          <small>Enter the 6-digit code from the app</small>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Verify and activate</button>
+          <a th:href="@{/home}" class="btn btn-secondary">Cancel</a>
+        </div>
+
+      </form>
+    </div>
+
+    <div th:if="${TotpEnabled==true}" class="form-actions">
+
+      <form th:action="@{/totp-disable}" method="post">
+        <button type="submit" class="btn btn-primary" >Usuń Totp</button>
+      </form>
+
+    </div>
+
+  </div>
+</div>
+</body>
+</html>

@@ -14,4 +14,5 @@ import lombok.Setter;
 public class AuthForm {
     private String login;
     private String password;
+    private String TotpCode;
 }

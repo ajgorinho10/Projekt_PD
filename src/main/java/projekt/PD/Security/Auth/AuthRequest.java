@@ -15,4 +15,5 @@ public class AuthRequest {
     private String login;
     @NotBlank
     private String password;
+    private String TotpCode;
 }

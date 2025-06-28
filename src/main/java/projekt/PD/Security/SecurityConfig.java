@@ -16,12 +16,14 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.filter.HiddenHttpMethodFilter;
+import projekt.PD.Security.PageExceptions.CustomAuthenticationFailureHandler;
 
 /*
  * Klasa SecurityConfig jest odpowiedzialna za konfigurację bezpieczeństwa aplikacji.
@@ -70,6 +72,7 @@ public class SecurityConfig {
 
         http.formLogin((form) -> form
                 .loginPage("/login")
+                .failureHandler(authenticationFailureHandler())
                 .loginProcessingUrl("/performLogin")
                 .defaultSuccessUrl("/home",true)
                 .usernameParameter("username")
@@ -99,6 +102,11 @@ public class SecurityConfig {
 
 
         return http.build();
+    }
+
+    @Bean
+    public AuthenticationFailureHandler authenticationFailureHandler() {
+        return new CustomAuthenticationFailureHandler();
     }
 
     @Bean
