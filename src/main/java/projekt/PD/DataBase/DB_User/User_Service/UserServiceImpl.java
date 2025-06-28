@@ -146,7 +146,7 @@ public class UserServiceImpl implements UserService {
             return true;
 
         } catch (AuthenticationException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             return false;
         }
     }

@@ -16,4 +16,10 @@ public class AuthRequest {
     @NotBlank
     private String password;
     private String TotpCode;
+
+    public AuthRequest(String login, String password, String TotpCode) {
+        this.login = login;
+        this.password = password;
+        this.TotpCode = TotpCode;
+    }
 }

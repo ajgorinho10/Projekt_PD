@@ -52,30 +52,11 @@ public class AuthRestController {
                                            HttpServletRequest httpRequest,
                                            HttpServletResponse httpResponse) {
         try{
-            // Przeprowadzenie uwierzytelniania
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            input.getLogin(),
-                            input.getPassword()
-                    )
-            );
-
-            // Tworzenie nowego kontekstu bezpieczeństwa
-            SecurityContext securityContext = SecurityContextHolder.getContext();
-            securityContext.setAuthentication(authentication);
-
-            // Zapisanie kontekstu bezpieczeństwa w repozytorium (sesji HTTP)
-            securityContextRepository.saveContext(securityContext, httpRequest, httpResponse);
-
-            // Zapewnienie utworzenia sesji i zapisania w niej kontekstu
-            HttpSession session = httpRequest.getSession(true);
-            session.setAttribute("SPRING_SECURITY_CONTEXT", securityContext);
-
-            // Dodajemy informacje o sesji do odpowiedzi
+            userService.loginWith2FA(input, httpRequest, httpResponse);
             AuthResponse response = new AuthResponse(
                     true,
-                    "Zalogowano pomyślnie: " + authentication.getName(),
-                    session.getId()
+                    "Zalogowano pomyślnie: ",
+                    null
             );
             return ResponseEntity.ok(response);
 

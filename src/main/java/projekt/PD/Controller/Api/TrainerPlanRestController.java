@@ -33,7 +33,7 @@ public class TrainerPlanRestController {
     public ResponseEntity<?> getTrainerPlan() {
         User user = getUserID();
         List<TrainerPlan> plans = trainerPlanService.findByTrainerPlanUser_Id(user.getId());
-        if(plans!=null) {
+        if(!plans.isEmpty()) {
             return new ResponseEntity<>(TrainerPlanDTO.toDTO(plans), HttpStatus.OK);
         }
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
