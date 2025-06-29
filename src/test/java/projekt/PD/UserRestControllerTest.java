@@ -18,6 +18,7 @@ import projekt.PD.DataBase.DB_Trainer.Trainer;
 import projekt.PD.DataBase.DB_Trainer.Trainer_Service.TrainerService;
 import projekt.PD.DataBase.DB_User.User;
 import projekt.PD.DataBase.DB_User.User_Service.UserService;
+import projekt.PD.DataBase.DB_UserTrainingPlan.UserTrainingPlan;
 import projekt.PD.DataBase.DB_UserTrainingPlan.UserTrainingPlan_Service.UserTrainingPlanService;
 import projekt.PD.DataBase.DB_UserWorkout.UserWorkout_Service.User_WorkoutService;
 import projekt.PD.DataBase.DB_UserWorkout.UserWorkout_Service.WorkoutDTO;
@@ -33,8 +34,7 @@ import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -55,6 +55,7 @@ class UserRestControllerTest {
     @Autowired private User_WorkoutService userWorkoutService;
     @Autowired private TrainerService trainerService;
     @Autowired private ObjectMapper objectMapper;
+    @Autowired private UserTrainingPlanService userTrainingPlanService;
 
     private User testUser;
     private User testTrainer;
@@ -202,6 +203,138 @@ class UserRestControllerTest {
         when(trainerService.getAll()).thenReturn(List.of());
         mockMvc.perform(get("/api/users/trainer"))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DisplayName("GET /api/users/workout/{id} - powinien zwrócić trening, jeśli istnieje i należy do użytkownika")
+    @WithMockUser(username = "test-user")
+    void getUserWorkout_shouldReturnWorkout_whenFound() throws Exception {
+        // Given
+        when(userService.findUserByLogin("test-user")).thenReturn(testUser);
+
+        User_Workouts workout = new User_Workouts();
+        workout.setId(5L);
+        workout.setTitle("Testowy Trening");
+        workout.setUser(testUser);
+
+        when(userWorkoutService.findById(5L, 1L)).thenReturn(Optional.of(workout));
+
+        // When & Then
+        mockMvc.perform(get("/api/users/workout/5"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.title", is("Testowy Trening")));
+    }
+
+    @Test
+    @DisplayName("GET /api/users/workout/{id} - powinien zwrócić 404, jeśli trening nie istnieje")
+    @WithMockUser(username = "test-user")
+    void getUserWorkout_shouldReturnNotFound_whenNotFound() throws Exception {
+        // Given
+        when(userService.findUserByLogin("test-user")).thenReturn(testUser);
+        when(userWorkoutService.findById(99L, 1L)).thenReturn(Optional.empty());
+
+        // When & Then
+        mockMvc.perform(get("/api/users/workout/99"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DisplayName("DELETE /api/users/workout/{id} - powinien usunąć trening i zwrócić 200 OK")
+    @WithMockUser(username = "test-user")
+    void deleteWorkout_shouldReturnOk_whenDeletedSuccessfully() throws Exception {
+        // Given
+        when(userService.findUserByLogin("test-user")).thenReturn(testUser);
+        when(userWorkoutService.deleteById(5L, 1L)).thenReturn(true);
+
+        // When & Then
+        mockMvc.perform(delete("/api/users/workout/5").with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", is("Workout deleted")));
+    }
+
+    @Test
+    @DisplayName("DELETE /api/users/workout/{id} - powinien zwrócić 404, jeśli trening nie istnieje")
+    @WithMockUser(username = "test-user")
+    void deleteWorkout_shouldReturnNotFound_whenWorkoutNotFound() throws Exception {
+        // Given
+        when(userService.findUserByLogin("test-user")).thenReturn(testUser);
+        when(userWorkoutService.deleteById(99L, 1L)).thenReturn(false);
+
+        // When & Then
+        mockMvc.perform(delete("/api/users/workout/99").with(csrf()))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$", is("Workout not found")));
+    }
+
+    @Test
+    @DisplayName("GET /api/users/trainingplan - powinien zwrócić plany treningowe użytkownika")
+    @WithMockUser(username = "test-user")
+    void getAllTrainingPlans_shouldReturnPlans_whenFound() throws Exception {
+        // Given
+        when(userService.findUserByLogin("test-user")).thenReturn(testUser);
+        UserTrainingPlan plan = new UserTrainingPlan();
+        plan.setId(1L);
+        plan.setUser(testUser);
+        when(userTrainingPlanService.findByUser_Id(1L)).thenReturn(List.of(plan));
+
+        // When & Then
+        mockMvc.perform(get("/api/users/trainingplan"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)));
+    }
+
+    @Test
+    @DisplayName("GET /api/users/trainingplan/{id} - powinien zwrócić plan, jeśli istnieje")
+    @WithMockUser(username = "test-user")
+    void getTrainingPlanById_shouldReturnPlan_whenFound() throws Exception {
+        // Given
+        when(userService.findUserByLogin("test-user")).thenReturn(testUser);
+        UserTrainingPlan plan = new UserTrainingPlan();
+        plan.setId(10L);
+        plan.setUser(testUser);
+        when(userTrainingPlanService.findById(10L, 1L)).thenReturn(Optional.of(plan));
+
+        // When & Then
+        mockMvc.perform(get("/api/users/trainingplan/10"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is(10)));
+    }
+
+    @Test
+    @DisplayName("POST /api/users/trainingplan - powinien utworzyć plan treningowy")
+    @WithMockUser(username = "test-user")
+    void updateTrainingPlan_shouldCreatePlan() throws Exception {
+        // Given
+        when(userService.findUserByLogin("test-user")).thenReturn(testUser);
+        UserTrainingPlan requestPlan = new UserTrainingPlan();
+        requestPlan.setTitle("Mój nowy plan");
+
+        // When & Then
+        mockMvc.perform(post("/api/users/trainingplan")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(requestPlan)))
+                .andExpect(status().isCreated());
+
+        // Weryfikacja
+        ArgumentCaptor<UserTrainingPlan> planCaptor = ArgumentCaptor.forClass(UserTrainingPlan.class);
+        verify(userTrainingPlanService).create_or_change(planCaptor.capture());
+        assertThat(planCaptor.getValue().getUser().getId()).isEqualTo(1L);
+        assertThat(planCaptor.getValue().getTitle()).isEqualTo("Mój nowy plan");
+    }
+
+    @Test
+    @DisplayName("DELETE /api/users/trainingplan/{id} - powinien usunąć plan treningowy")
+    @WithMockUser(username = "test-user")
+    void deleteTrainingPlan_shouldReturnOk_whenDeleted() throws Exception {
+        // Given
+        when(userService.findUserByLogin("test-user")).thenReturn(testUser);
+        when(userTrainingPlanService.deleteById(20L, 1L)).thenReturn(true);
+
+        // When & Then
+        mockMvc.perform(delete("/api/users/trainingplan/20").with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", is("Training plan removed")));
     }
 
 }

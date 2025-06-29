@@ -21,6 +21,7 @@ import projekt.PD.DataBase.PD_Course.Course_Service.CourseService;
 import projekt.PD.Services.CurrentUser;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,7 +35,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(CourseRestController.class)
-@Import(CourseRestControllerTest.TestConfig.class)
+@Import({CourseRestControllerTest.TestConfig.class})
 class CourseRestControllerTest {
 
     // Konfiguracja mocków dla tego testu (zgodnie z nowymi standardami Springa)
@@ -76,6 +77,8 @@ class CourseRestControllerTest {
         testUser = new User();
         testUser.setId(1L);
         testUser.setLogin("test-user");
+        testUser.setRoles("ROLE_USER");
+        testUser.setTrainer(null);
 
         // Trener (jako encja Trainer)
         testTrainer = new Trainer();
@@ -206,5 +209,92 @@ class CourseRestControllerTest {
                 .andExpect(content().string("User has been deleted from course"));
 
         verify(userService).updateUser(testUser);
+    }
+
+    @Test
+    @DisplayName("GET /api/course/trainer - powinien zwrócić kursy dla zalogowanego trenera")
+    @WithMockUser(username = "trainer-user", roles = "TRAINER")
+    void getCourseTrainer_shouldReturnCourses_forLoggedInTrainer() throws Exception {
+        // Given
+        // Symulujemy, że metoda pomocnicza getUserID() zwraca naszego trenera
+        when(userService.findUserByLogin("trainer-user")).thenReturn(testTrainerUser);
+        // Symulujemy, że serwis znajduje kursy dla tego trenera
+        when(courseService.findByCourseTrainer_Id(testTrainer.getId())).thenReturn(List.of(testCourse));
+
+        // When & Then
+        mockMvc.perform(get("/api/course/trainer"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].title", is("Kurs Jogi")));
+    }
+
+    @Test
+    @DisplayName("GET /api/course/trainer - powinien zwrócić 404, gdy trener nie ma kursów")
+    @WithMockUser(username = "trainer-user", roles = "TRAINER")
+    void getCourseTrainer_shouldReturnNotFound_whenNoCourses() throws Exception {
+        // Given
+        when(userService.findUserByLogin("trainer-user")).thenReturn(testTrainerUser);
+        // Symulujemy, że serwis nie znajduje żadnych kursów
+        when(courseService.findByCourseTrainer_Id(testTrainer.getId())).thenReturn(Collections.emptyList());
+
+        // When & Then
+        mockMvc.perform(get("/api/course/trainer"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DisplayName("GET /api/course/user - powinien zwrócić kursy, do których zapisany jest użytkownik")
+    @WithMockUser(username = "test-user")
+    void getCourseUsers_shouldReturnCourses_forEnrolledUser() throws Exception {
+        // Given
+        when(userService.findUserByLogin("test-user")).thenReturn(testUser);
+        when(courseService.findByUsers_Id(testUser.getId())).thenReturn(List.of(testCourse));
+
+        // When & Then
+        mockMvc.perform(get("/api/course/user"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].id", is(100)));
+    }
+
+    @Test
+    @DisplayName("GET /api/course/user - powinien zwrócić 404, gdy użytkownik nie jest zapisany na żaden kurs")
+    @WithMockUser(username = "test-user")
+    void getCourseUsers_shouldReturnNotFound_whenNotEnrolled() throws Exception {
+        // Given
+        when(userService.findUserByLogin("test-user")).thenReturn(testUser);
+        when(courseService.findByUsers_Id(testUser.getId())).thenReturn(Collections.emptyList());
+
+        // When & Then
+        mockMvc.perform(get("/api/course/user"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DisplayName("POST /api/course/user/{id} - powinien zwrócić 404, gdy kurs do dołączenia nie istnieje")
+    @WithMockUser(username = "test-user")
+    void addUserToCourse_shouldReturnNotFound_whenCourseDoesNotExist() throws Exception {
+        // Given
+        when(userService.findUserByLogin("test-user")).thenReturn(testUser);
+        when(courseService.findById(999L)).thenReturn(Optional.empty());
+
+        // When & Then
+        mockMvc.perform(post("/api/course/user/999").with(csrf()))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$", is("Can't add user to course")));
+    }
+
+    @Test
+    @DisplayName("POST /api/course/user/{id} - powinien zwrócić 200 OK, gdy trener próbuje dołączyć do swojego kursu")
+    @WithMockUser(username = "trainer-user")
+    void addUserToCourse_shouldReturnOk_whenTrainerJoinsOwnCourse() throws Exception {
+        // Given
+        when(userService.findUserByLogin("trainer-user")).thenReturn(testTrainerUser);
+        when(courseService.findById(100L)).thenReturn(Optional.of(testCourse));
+
+        // When & Then
+        mockMvc.perform(post("/api/course/user/100").with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", is("This is your course")));
     }
 }

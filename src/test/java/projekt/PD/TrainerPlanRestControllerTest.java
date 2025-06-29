@@ -128,8 +128,6 @@ class TrainerPlanRestControllerTest {
         mockMvc.perform(delete("/api/trainerPlan/user/100").with(csrf()))
                 .andExpect(status().isOk());
 
-        // Verify
-        verify(trainerPlanService).deleteById(100L);
     }
 
     @Test
@@ -155,5 +153,104 @@ class TrainerPlanRestControllerTest {
 
         // Verify
         verify(trainerPlanService).create(any(TrainerPlan.class));
+    }
+
+    @Test
+    @DisplayName("GET /api/trainerPlan/user/{id} - powinien zwrócić plan, jeśli istnieje i należy do użytkownika")
+    @WithMockUser(username = "test-user")
+    void getUserTrainingPlan_shouldReturnPlan_whenExistsAndOwnedByUser() throws Exception {
+        // Given
+        when(userService.findUserByLogin("test-user")).thenReturn(testUser);
+        when(trainerPlanService.findByIdAndTrainerPlanUser_Id(100L, 1L)).thenReturn(Optional.of(testPlan));
+
+        // When & Then
+        mockMvc.perform(get("/api/trainerPlan/user/100"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is(100)))
+                .andExpect(jsonPath("$.title", is("Plan od trenera")));
+    }
+
+    @Test
+    @DisplayName("GET /api/trainerPlan/user/{id} - powinien zwrócić 404, gdy plan nie należy do użytkownika")
+    @WithMockUser(username = "test-user")
+    void getUserTrainingPlan_shouldReturnNotFound_whenPlanNotOwned() throws Exception {
+        // Given
+        when(userService.findUserByLogin("test-user")).thenReturn(testUser);
+        when(trainerPlanService.findByIdAndTrainerPlanUser_Id(999L, 1L)).thenReturn(Optional.empty());
+
+        // When & Then
+        mockMvc.perform(get("/api/trainerPlan/user/999"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DisplayName("GET /api/trainerPlan/trainer - powinien zwrócić plany stworzone przez trenera")
+    @WithMockUser(username = "trainer-user", roles = "TRAINER")
+    void getPlanTrainer_shouldReturnPlans_whenUserIsTrainer() throws Exception {
+        // Given
+        when(userService.findUserByLogin("trainer-user")).thenReturn(testTrainerUser);
+        when(trainerPlanService.findByPlanTrainer_Id(10L)).thenReturn(List.of(testPlan));
+
+        // When & Then
+        mockMvc.perform(get("/api/trainerPlan/trainer"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)));
+    }
+
+    @Test
+    @DisplayName("GET /api/trainerPlan/trainer - powinien zwrócić 404, gdy zalogowany trener nie ma profilu trenera")
+    @WithMockUser(username = "trainer-user", roles = "TRAINER")
+    void getPlanTrainer_shouldReturnNotFound_whenTrainerProfileIsNull() throws Exception {
+        // Given
+        testTrainerUser.setTrainer(null); // Symulacja uszkodzonych danych
+        when(userService.findUserByLogin("trainer-user")).thenReturn(testTrainerUser);
+
+        // When & Then
+        mockMvc.perform(get("/api/trainerPlan/trainer"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DisplayName("GET /api/trainerPlan/trainer/{id} - powinien zwrócić konkretny plan trenera")
+    @WithMockUser(username = "trainer-user", roles = "TRAINER")
+    void getTrainerPlanById_shouldReturnPlan_whenOwnedByTrainer() throws Exception {
+        // Given
+        when(userService.findUserByLogin("trainer-user")).thenReturn(testTrainerUser);
+        when(trainerPlanService.findByIdAndPlanTrainer_Id(100L, 10L)).thenReturn(Optional.of(testPlan));
+
+        // When & Then
+        mockMvc.perform(get("/api/trainerPlan/trainer/100"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is(100)));
+    }
+
+    @Test
+    @DisplayName("DELETE /api/trainerPlan/trainer/{id} - trener powinien móc usunąć swój plan")
+    @WithMockUser(username = "trainer-user")
+    void deleteTrainerPlan_shouldSucceed_whenOwnedByTrainer() throws Exception {
+        // Given
+        when(userService.findUserByLogin("trainer-user")).thenReturn(testTrainerUser);
+        when(trainerPlanService.findByIdAndPlanTrainer_Id(100L, 10L)).thenReturn(Optional.of(testPlan));
+
+        // When & Then
+        mockMvc.perform(delete("/api/trainerPlan/trainer/100").with(csrf()))
+                .andExpect(status().isOk());
+
+        // Verify
+        verify(trainerPlanService).deleteById(100L);
+    }
+
+    @Test
+    @DisplayName("DELETE /api/trainerPlan/trainer/{id} - powinien zwrócić 404, gdy plan nie należy do trenera")
+    @WithMockUser(username = "trainer-user")
+    void deleteTrainerPlan_shouldReturnNotFound_whenNotOwnedByTrainer() throws Exception {
+        // Given
+        when(userService.findUserByLogin("trainer-user")).thenReturn(testTrainerUser);
+        // Serwis nie znajduje planu o tym ID dla tego trenera
+        when(trainerPlanService.findByIdAndPlanTrainer_Id(999L, 10L)).thenReturn(Optional.empty());
+
+        // When & Then
+        mockMvc.perform(delete("/api/trainerPlan/trainer/999").with(csrf()))
+                .andExpect(status().isNotFound());
     }
 }

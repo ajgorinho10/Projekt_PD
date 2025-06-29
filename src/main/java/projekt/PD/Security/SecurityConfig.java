@@ -32,7 +32,8 @@ import projekt.PD.Security.PageExceptions.CustomAuthenticationFailureHandler;
 @EnableWebSecurity
 @EnableMethodSecurity(
         securedEnabled = true,
-        jsr250Enabled = true
+        jsr250Enabled = true,
+        prePostEnabled = true
 )
 @Configuration
 public class SecurityConfig {

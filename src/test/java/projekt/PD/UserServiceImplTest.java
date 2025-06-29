@@ -1,17 +1,17 @@
 package projekt.PD;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.*;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.context.SecurityContextRepository;
 import projekt.PD.DataBase.DB_User.User;
@@ -22,20 +22,12 @@ import projekt.PD.Security.Auth.AuthRequest;
 import projekt.PD.Security.RestExceptions.Exceptions.LoginAlreadyExistException;
 import projekt.PD.Util.TotpUtil;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
+import java.util.*;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
 class UserServiceImplTest {
 
     @Mock
@@ -50,509 +42,432 @@ class UserServiceImplTest {
     @Mock
     private SecurityContextRepository securityContextRepository;
 
-    // Mocks for HttpServletRequest/Response/Session
-    @Mock
-    private HttpServletRequest httpRequest;
-    @Mock
-    private HttpServletResponse httpResponse;
-    @Mock
-    private HttpSession httpSession;
-
     @InjectMocks
     private UserServiceImpl userService;
 
-    private User testUser;
-
     @BeforeEach
-    void setUp() {
-        testUser = new User();
-        testUser.setId(1L);
-        testUser.setLogin("testuser");
-        testUser.setPassword("encodedPassword");
-        testUser.setRoles("ROLE_USER");
+    void setup() {
+        MockitoAnnotations.openMocks(this);
+    }
+
+    @AfterEach
+    void afterEach() {
+        Mockito.framework().clearInlineMocks();
     }
 
     @Test
-    @DisplayName("Powinien zwrócić wszystkich użytkowników")
-    void shouldGetAllUsers() {
-        // Given
-        when(userRepository.findAll()).thenReturn(List.of(testUser));
+    void getAllUsers_ShouldReturnList() {
+        List<User> users = List.of(new User(), new User());
+        when(userRepository.findAll()).thenReturn(users);
 
-        // When
-        List<User> users = userService.getAllUsers();
+        List<User> result = userService.getAllUsers();
 
-        // Then
-        assertThat(users).isNotNull();
-        assertThat(users.size()).hasSameClassAs(32);
-        assertThat(users.get(0).getLogin()).isEqualTo("testuser");
-        verify(userRepository).findAll();
+        assertEquals(users, result);
     }
 
     @Test
-    @DisplayName("Powinien znaleźć użytkownika po loginie")
-    void shouldFindUserByLogin() {
-        // Given
-        when(userRepository.findByLogin("testuser")).thenReturn(Optional.of(testUser));
+    void findUserByLogin_ShouldReturnUser_WhenExists() {
+        User user = new User();
+        user.setLogin("test");
+        when(userRepository.findByLogin("test")).thenReturn(Optional.of(user));
 
-        // When
-        User foundUser = userService.findUserByLogin("testuser");
+        User result = userService.findUserByLogin("test");
 
-        // Then
-        assertThat(foundUser).isNotNull();
-        assertThat(foundUser.getLogin()).isEqualTo("testuser");
+        assertNotNull(result);
+        assertEquals("test", result.getLogin());
     }
 
     @Test
-    @DisplayName("Powinien zwrócić null, gdy użytkownik o danym loginie nie istnieje")
-    void shouldReturnNullWhenUserNotFoundByLogin() {
-        // Given
-        when(userRepository.findByLogin("nonexistent")).thenReturn(Optional.empty());
+    void findUserByLogin_ShouldReturnNull_WhenNotExists() {
+        when(userRepository.findByLogin("test")).thenReturn(Optional.empty());
 
-        // When
-        User foundUser = userService.findUserByLogin("nonexistent");
+        User result = userService.findUserByLogin("test");
 
-        // Then
-        assertThat(foundUser).isNull();
+        assertNull(result);
     }
 
     @Test
-    @DisplayName("Powinien pomyślnie utworzyć nowego użytkownika")
-    void shouldCreateUser() {
-        // Given
-        AuthRegister registrationData = new AuthRegister("newUser", "password", "Jan", "Kowalski");
-        when(userRepository.existsByLogin("newUser")).thenReturn(false);
-        when(passwordEncoder.encode("password")).thenReturn("encodedPassword");
-        when(userRepository.save(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0));
+    void findUserById_ShouldReturnUser_WhenExists() {
+        User user = new User();
+        user.setId(1L);
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
 
-        // When
-        User createdUser = userService.createUser(registrationData);
+        User result = userService.findUserById(1L);
 
-        // Then
-        assertThat(createdUser.getLogin()).isEqualTo("newUser");
-        assertThat(createdUser.getPassword()).isEqualTo("encodedPassword");
-        assertThat(createdUser.getRoles()).isEqualTo("ROLE_USER");
+        assertNotNull(result);
+        assertEquals(1L, result.getId());
+    }
+
+    @Test
+    void findUserById_ShouldReturnNull_WhenNotExists() {
+        when(userRepository.findById(1L)).thenReturn(Optional.empty());
+
+        User result = userService.findUserById(1L);
+
+        assertNull(result);
+    }
+
+    @Test
+    void createUser_ShouldThrowException_WhenLoginExists() {
+        AuthRegister input = new AuthRegister();
+        input.setLogin("existing");
+        input.setPassword("pass");
+        input.setFirstName("fn");
+        input.setLastName("ln");
+
+        when(userRepository.existsByLogin("existing")).thenReturn(true);
+
+        assertThrows(LoginAlreadyExistException.class, () -> userService.createUser(input));
+    }
+
+    @Test
+    void createUser_ShouldSaveUser_WhenLoginNotExists() {
+        AuthRegister input = new AuthRegister();
+        input.setLogin("newlogin");
+        input.setPassword("pass");
+        input.setFirstName("fn");
+        input.setLastName("ln");
+
+        when(userRepository.existsByLogin("newlogin")).thenReturn(false);
+        when(passwordEncoder.encode("pass")).thenReturn("encodedPass");
+
+        User savedUser = new User();
+        savedUser.setLogin("newlogin");
+        when(userRepository.save(any(User.class))).thenReturn(savedUser);
+
+        User result = userService.createUser(input);
+
+        assertNotNull(result);
+        assertEquals("newlogin", result.getLogin());
         verify(userRepository).save(any(User.class));
     }
 
     @Test
-    @DisplayName("Powinien rzucić wyjątek, gdy login już istnieje podczas tworzenia użytkownika")
-    void shouldThrowExceptionWhenLoginExistsOnCreate() {
-        // Given
-        AuthRegister registrationData = new AuthRegister("testuser", "password", "Jan", "Kowalski");
-        when(userRepository.existsByLogin("testuser")).thenReturn(true);
+    void updateUser_ShouldSaveAndReturnUser() {
+        User user = new User();
+        user.setLogin("user");
+        when(userRepository.save(user)).thenReturn(user);
 
-        // When & Then
-        assertThatThrownBy(() -> userService.createUser(registrationData))
-                .isInstanceOf(LoginAlreadyExistException.class)
-                .hasMessage("Login już istnieje !");
+        User result = userService.updateUser(user);
 
-        verify(userRepository, never()).save(any(User.class));
+        assertEquals(user, result);
     }
 
     @Test
-    @DisplayName("Powinien pomyślnie zalogować użytkownika bez 2FA")
-    void shouldLoginUserWithout2FA() {
-        // Given
-        AuthRequest authRequest = new AuthRequest("testuser", "password", null);
-        testUser.setMfaEnabled(false);
+    void deleteUser_ShouldDeleteByIdAndReturnTrue() {
+        boolean result = userService.deleteUser(1L);
+
+        verify(userRepository).deleteById(1L);
+        assertTrue(result);
+    }
+
+    @Test
+    void changeRole_ShouldUpdateUserRole_WhenUserFound() {
+        User user = new User();
+        user.setRoles("ROLE_USER");
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+
+        userService.changeRole(1L, "ROLE_ADMIN");
+
+        assertEquals("ROLE_ADMIN", user.getRoles());
+    }
+
+    @Test
+    void changeRole_ShouldDoNothing_WhenUserNotFound() {
+        when(userRepository.findById(1L)).thenReturn(Optional.empty());
+
+        userService.changeRole(1L, "ROLE_ADMIN");
+
+        // No exception thrown, no changes made
+        verify(userRepository, never()).save(any());
+    }
+
+    @Test
+    void ifUserExists_Login_ShouldReturnTrue_WhenExists() {
+        when(userRepository.existsByLogin("login")).thenReturn(true);
+
+        assertTrue(userService.ifUserExists("login"));
+    }
+
+    @Test
+    void ifUserExists_Login_ShouldReturnFalse_WhenNotExists() {
+        when(userRepository.existsByLogin("login")).thenReturn(false);
+
+        assertFalse(userService.ifUserExists("login"));
+    }
+
+    @Test
+    void ifUserExists_Id_ShouldReturnTrue_WhenExists() {
+        when(userRepository.existsById(1L)).thenReturn(true);
+
+        assertTrue(userService.ifUserExists(1L));
+    }
+
+    @Test
+    void ifUserExists_Id_ShouldReturnFalse_WhenNotExists() {
+        when(userRepository.existsById(1L)).thenReturn(false);
+
+        assertFalse(userService.ifUserExists(1L));
+    }
+
+    @Test
+    void getUsersByRole_ShouldReturnList() {
+        List<User> users = List.of(new User());
+        when(userRepository.getUsersByRoles("ROLE_USER")).thenReturn(users);
+
+        List<User> result = userService.getUsersByRole("ROLE_USER");
+
+        assertEquals(users, result);
+    }
+
+    // ========== TESTY loginWith2FA ==========
+
+    @Test
+    void loginWith2FA_ShouldReturnFalse_WhenUserNotFound() {
+        AuthRequest request = new AuthRequest("Login","Password",null);
+        request.setLogin("nonexistent");
+
+        when(userRepository.findByLogin("nonexistent")).thenReturn(Optional.empty());
+
+        boolean result = userService.loginWith2FA(request, mock(HttpServletRequest.class), mock(HttpServletResponse.class));
+
+        assertFalse(result);
+    }
+
+    @Test
+    void loginWith2FA_ShouldSetTotpCodeInSession_WhenMfaEnabled() {
+        User user = new User();
+        user.setMfaEnabled(true);
+
+        AuthRequest request = new AuthRequest("Login","Password",null);
+        request.setLogin("user");
+        request.setPassword("pass");
+        request.setTotpCode("123456");
+
+        when(userRepository.findByLogin("user")).thenReturn(Optional.of(user));
+
+        HttpServletRequest httpRequest = mock(HttpServletRequest.class);
+        HttpServletResponse httpResponse = mock(HttpServletResponse.class);
+        HttpSession session = mock(HttpSession.class);
+
+        when(httpRequest.getSession()).thenReturn(session);
+
         Authentication authentication = mock(Authentication.class);
+        when(authenticationManager.authenticate(any())).thenReturn(authentication);
 
-        when(userRepository.findByLogin("testuser")).thenReturn(Optional.of(testUser));
-        when(httpRequest.getSession()).thenReturn(httpSession);
-        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenReturn(authentication);
+        SecurityContext securityContext = mock(SecurityContext.class);
+        SecurityContextHolder.setContext(securityContext);
 
-        // When
-        boolean result = userService.loginWith2FA(authRequest, httpRequest, httpResponse);
+        doNothing().when(securityContextRepository).saveContext(securityContext, httpRequest, httpResponse);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        doNothing().when(securityContext).setAuthentication(authentication);
 
-        // Then
-        assertThat(result).isTrue();
-        verify(securityContextRepository).saveContext(any(), eq(httpRequest), eq(httpResponse));
-        // POPRAWIONA LINIA: Użycie eq() dla pierwszego argumentu
-        verify(httpSession, never()).setAttribute(eq("totpCode"), any());
+        boolean result = userService.loginWith2FA(request, httpRequest, httpResponse);
+
+        assertTrue(result);
+        verify(session).setAttribute("totpCode", "123456");
+        verify(session).setAttribute("SPRING_SECURITY_CONTEXT", securityContext);
+        verify(securityContextRepository).saveContext(securityContext, httpRequest, httpResponse);
     }
 
     @Test
-    @DisplayName("Powinien pomyślnie zalogować użytkownika z włączonym 2FA")
-    void shouldLoginUserWith2FA() {
-        // Given
-        AuthRequest authRequest = new AuthRequest("testuser", "password", "123456");
-        testUser.setMfaEnabled(true);
-        Authentication authentication = mock(Authentication.class);
+    void loginWith2FA_ShouldReturnFalse_WhenAuthenticationFails() {
+        User user = new User();
+        user.setMfaEnabled(false);
 
-        when(userRepository.findByLogin("testuser")).thenReturn(Optional.of(testUser));
-        when(httpRequest.getSession()).thenReturn(httpSession);
-        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenReturn(authentication);
+        AuthRequest request = new AuthRequest("Login","Password",null);
+        request.setLogin("user");
+        request.setPassword("wrong");
 
-        // When
-        boolean result = userService.loginWith2FA(authRequest, httpRequest, httpResponse);
+        when(userRepository.findByLogin("user")).thenReturn(Optional.of(user));
 
-        // Then
-        assertThat(result).isTrue();
+        HttpServletRequest httpRequest = mock(HttpServletRequest.class);
+        HttpServletResponse httpResponse = mock(HttpServletResponse.class);
+        HttpSession session = mock(HttpSession.class);
+        when(httpRequest.getSession()).thenReturn(session);
 
-        // POPRAWIONA LINIA: Przekazanie wartości bezpośrednio, bez zbędnych eq()
-        verify(httpSession).setAttribute("totpCode", "123456");
+        when(authenticationManager.authenticate(any()))
+                .thenThrow(new AuthenticationException("bad credentials") {});
 
-        verify(securityContextRepository).saveContext(any(), eq(httpRequest), eq(httpResponse));
+        boolean result = userService.loginWith2FA(request, httpRequest, httpResponse);
+
+        assertFalse(result);
     }
 
-    @Test
-    @DisplayName("Powinien zwrócić false przy nieudanej autentykacji")
-    void shouldReturnFalseOnFailedAuthentication() {
-        // Given
-        AuthRequest authRequest = new AuthRequest("testuser", "wrongpassword", null);
-
-        when(userRepository.findByLogin("testuser")).thenReturn(Optional.of(testUser));
-        when(httpRequest.getSession()).thenReturn(httpSession);
-        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
-                .thenThrow(new AuthenticationException("Błędne dane") {});
-
-        // When
-        boolean result = userService.loginWith2FA(authRequest, httpRequest, httpResponse);
-
-        // Then
-        assertThat(result).isFalse();
-        verify(securityContextRepository, never()).saveContext(any(), any(), any());
-    }
+    // ========== TESTY generateMfaSecret ==========
 
     @Test
-    @DisplayName("Powinien wygenerować sekret MFA dla użytkownika")
-    void shouldGenerateMfaSecret() {
-        // Given
-        when(userRepository.findById(1L)).thenReturn(Optional.of(testUser));
-        ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
+    void generateMfaSecret_ShouldReturnNull_WhenUserNotFound() {
+        when(userRepository.findById(1L)).thenReturn(Optional.empty());
 
-        // When
         String secret = userService.generateMfaSecret(1L);
 
-        // Then
-        assertThat(secret).hasSize(32);
-
-        verify(userRepository).save(userCaptor.capture());
-        User savedUser = userCaptor.getValue();
-
-        assertThat(savedUser.getMfaSecret()).isEqualTo(secret);
-        assertThat(savedUser.isMfaEnabled()).isFalse();
-        assertThat(savedUser.isMfaVerified()).isFalse();
+        assertNull(secret);
     }
 
     @Test
-    @DisplayName("Powinien zweryfikować i aktywować MFA z poprawnym kodem TOTP")
-    void shouldVerifyAndEnableMfaWithValidCode() {
-        // Given
-        String secret = TotpUtil.generateSecret();
-        String validCode = TotpUtil.generateCode(secret, System.currentTimeMillis() / 30000);
+    void generateMfaSecret_ShouldGenerateAndSaveSecret_WhenUserFound() {
+        User user = new User();
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(userRepository.save(user)).thenReturn(user);
 
-        testUser.setMfaSecret(secret);
-        testUser.setMfaEnabled(false);
-        when(userRepository.findById(1L)).thenReturn(Optional.of(testUser));
+        try (var mockedStatic = mockStatic(TotpUtil.class)) {
+            mockedStatic.when(TotpUtil::generateSecret).thenReturn("secret-code");
 
-        // When
-        boolean result = userService.verifyAndEnableMfa(1L, validCode);
+            String secret = userService.generateMfaSecret(1L);
 
-        // Then
-        assertThat(result).isTrue();
+            assertEquals("secret-code", secret);
+            assertEquals("secret-code", user.getMfaSecret());
+        }
+    }
 
-        ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
-        verify(userRepository).save(userCaptor.capture());
-        User savedUser = userCaptor.getValue();
+    // ========== TESTY verifyAndEnableMfa ==========
 
-        assertThat(savedUser.isMfaEnabled()).isTrue();
-        assertThat(savedUser.isMfaVerified()).isTrue();
+    @Test
+    void verifyAndEnableMfa_ShouldReturnFalse_WhenUserNotFound() {
+        when(userRepository.findById(1L)).thenReturn(Optional.empty());
+
+        boolean result = userService.verifyAndEnableMfa(1L, "123456");
+
+        assertFalse(result);
     }
 
     @Test
-    @DisplayName("Nie powinien aktywować MFA z niepoprawnym kodem TOTP")
-    void shouldNotEnableMfaWithInvalidCode() {
-        // Given
-        testUser.setMfaSecret("FAKESECRET");
-        testUser.setMfaEnabled(false);
-        when(userRepository.findById(1L)).thenReturn(Optional.of(testUser));
+    void verifyAndEnableMfa_ShouldReturnFalse_WhenMfaAlreadyEnabled() {
+        User user = new User();
+        user.setMfaEnabled(true);
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
 
-        // When
-        boolean result = userService.verifyAndEnableMfa(1L, "invalidcode");
+        boolean result = userService.verifyAndEnableMfa(1L, "123456");
 
-        // Then
-        assertThat(result).isFalse();
-        verify(userRepository, never()).save(any(User.class));
+        assertFalse(result);
     }
 
     @Test
-    @DisplayName("Powinien dezaktywować MFA dla użytkownika")
-    void shouldDisableMfa() {
-        // Given
-        testUser.setMfaEnabled(true);
-        testUser.setMfaSecret("ANY_SECRET");
-        testUser.setMfaVerified(true);
-        when(userRepository.findById(1L)).thenReturn(Optional.of(testUser));
-        ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
+    void verifyAndEnableMfa_ShouldReturnFalse_WhenMfaSecretIsNull() {
+        User user = new User();
+        user.setMfaEnabled(false);
+        user.setMfaSecret(null);
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
 
-        // When
+        boolean result = userService.verifyAndEnableMfa(1L, "123456");
+
+        assertFalse(result);
+    }
+
+    @Test
+    void verifyAndEnableMfa_ShouldEnableMfa_WhenCodeIsValid() {
+        User user = new User();
+        user.setMfaEnabled(false);
+        user.setMfaSecret("secret");
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(userRepository.save(user)).thenReturn(user);
+
+        try (var mockedStatic = mockStatic(TotpUtil.class)) {
+            mockedStatic.when(() -> TotpUtil.verifyCode("secret", "123456")).thenReturn(true);
+
+            boolean result = userService.verifyAndEnableMfa(1L, "123456");
+
+            assertTrue(result);
+            assertTrue(user.isMfaEnabled());
+            assertTrue(user.isMfaVerified());
+        }
+    }
+
+    @Test
+    void verifyAndEnableMfa_ShouldReturnFalse_WhenCodeInvalid() {
+        User user = new User();
+        user.setMfaEnabled(false);
+        user.setMfaSecret("secret");
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+
+        try (var mockedStatic = mockStatic(TotpUtil.class)) {
+            mockedStatic.when(() -> TotpUtil.verifyCode("secret", "123456")).thenReturn(false);
+
+            boolean result = userService.verifyAndEnableMfa(1L, "123456");
+
+            assertFalse(result);
+            verify(userRepository, never()).save(any());
+        }
+    }
+
+    // ========== TESTY verifyTotp ==========
+
+    @Test
+    void verifyTotp_ShouldReturnFalse_WhenUserNotFound() {
+        when(userRepository.findById(1L)).thenReturn(Optional.empty());
+
+        boolean result = userService.verifyTotp(1L, "123456");
+
+        assertFalse(result);
+    }
+
+    @Test
+    void verifyTotp_ShouldReturnFalse_WhenMfaNotEnabled() {
+        User user = new User();
+        user.setMfaEnabled(false);
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+
+        boolean result = userService.verifyTotp(1L, "123456");
+
+        assertFalse(result);
+    }
+
+    @Test
+    void verifyTotp_ShouldReturnFalse_WhenMfaSecretNull() {
+        User user = new User();
+        user.setMfaEnabled(true);
+        user.setMfaSecret(null);
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+
+        boolean result = userService.verifyTotp(1L, "123456");
+
+        assertFalse(result);
+    }
+
+    @Test
+    void verifyTotp_ShouldReturnTrue_WhenCodeValid() {
+        User user = new User();
+        user.setMfaEnabled(true);
+        user.setMfaSecret("secret");
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+
+        try (var mockedStatic = mockStatic(TotpUtil.class)) {
+            mockedStatic.when(() -> TotpUtil.verifyCode("secret", "123456")).thenReturn(true);
+
+            boolean result = userService.verifyTotp(1L, "123456");
+
+            assertTrue(result);
+        }
+    }
+
+    // ========== TESTY disableMfa ==========
+
+    @Test
+    void disableMfa_ShouldReturnFalse_WhenUserNotFound() {
+        when(userRepository.findById(1L)).thenReturn(Optional.empty());
+
         boolean result = userService.disableMfa(1L);
 
-        // Then
-        assertThat(result).isTrue();
-
-        verify(userRepository).save(userCaptor.capture());
-        User savedUser = userCaptor.getValue();
-
-        assertThat(savedUser.isMfaEnabled()).isFalse();
-        assertThat(savedUser.getMfaSecret()).isNull();
-        assertThat(savedUser.isMfaVerified()).isFalse();
+        assertFalse(result);
     }
 
     @Test
-    @DisplayName("Powinien zwrócić true, gdy użytkownik o danym ID zostanie usunięty")
-    void shouldReturnTrueWhenUserIsDeleted() {
-        // Given
-        Long userId = 1L;
-        // Metoda deleteById zwraca void, więc nie ma potrzeby stubowania z 'when'
-        // Mockito domyślnie nie rzuca wyjątku dla metod void
+    void disableMfa_ShouldDisableMfaAndSave_WhenUserFound() {
+        User user = new User();
+        user.setMfaEnabled(true);
+        user.setMfaSecret("secret");
+        user.setMfaVerified(true);
 
-        // When
-        boolean result = userService.deleteUser(userId);
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(userRepository.save(user)).thenReturn(user);
 
-        // Then
-        assertThat(result).isTrue();
-        verify(userRepository).deleteById(userId);
+        boolean result = userService.disableMfa(1L);
+
+        assertTrue(result);
+        assertFalse(user.isMfaEnabled());
+        assertNull(user.getMfaSecret());
+        assertFalse(user.isMfaVerified());
+        verify(userRepository).save(user);
     }
-
-    @Test
-    @DisplayName("Sprawdzenie działania funkcji findUserById")
-    void shouldReturnFalseWhenUserIsNotDeleted() {
-        Long userId1 = 1L;
-        Long userId2 = 2L;
-
-        when(userRepository.findById(userId1)).thenReturn(Optional.of(testUser));
-
-        User userFound = userService.findUserById(userId1);
-        User userNotFound = userService.findUserById(userId2);
-
-        assertThat(userFound).isEqualTo(testUser);
-        assertThat(userNotFound).isNull();
-    }
-
-    @Test
-    @DisplayName("Powinien poprawnie zaktualizować i zwrócić użytkownika")
-    void shouldUpdateAndReturnUser() {
-
-        testUser.setFirstName("Jan");
-        testUser.setLastName("Kowalski");
-
-        when(userRepository.save(testUser)).thenReturn(testUser);
-
-        User updatedUser = userService.updateUser(testUser);
-
-        assertThat(updatedUser).isNotNull();
-        assertThat(updatedUser.getFirstName()).isEqualTo("Jan");
-
-        verify(userRepository).save(testUser);
-    }
-
-    @Test
-    @DisplayName("Powinien zmienić rolę użytkownika, gdy ten istnieje")
-    void shouldChangeUserRoleWhenUserExists() {
-        // Given (Arrange)
-        Long userId = 1L;
-        String newRole = "ROLE_ADMIN";
-        // Używamy obiektu 'testUser' zdefiniowanego w @BeforeEach
-        when(userRepository.findById(userId)).thenReturn(Optional.of(testUser));
-
-        // When (Act)
-        userService.changeRole(userId, newRole);
-
-        // Then (Assert)
-        // Weryfikujemy, czy metoda findById została wywołana
-        verify(userRepository).findById(userId);
-        // Sprawdzamy, czy na obiekcie użytkownika została ustawiona nowa rola.
-        // Działa to, ponieważ `ifPresent` modyfikuje ten sam obiekt, który dostarczyliśmy w mocku.
-        assertThat(testUser.getRoles()).isEqualTo(newRole);
-
-        // UWAGA: W tym teście nie weryfikujemy wywołania metody save(), ponieważ nie ma jej w kodzie metody.
-        // Zakładamy, że ta metoda działa w kontekście transakcyjnym (@Transactional),
-        // gdzie zmiana na obiekcie zarządzanym przez JPA jest automatycznie zapisywana.
-    }
-
-    @Test
-    @DisplayName("Nie powinien nic robić, gdy użytkownik do zmiany roli nie istnieje")
-    void shouldNotDoAnythingWhenUserToChangeRoleDoesNotExist() {
-        // Given
-        Long nonExistentId = 99L;
-        when(userRepository.findById(nonExistentId)).thenReturn(Optional.empty());
-
-        // When
-        userService.changeRole(nonExistentId, "ROLE_ADMIN");
-
-        // Then
-        // Sprawdzamy tylko, czy nastąpiła próba znalezienia użytkownika.
-        verify(userRepository).findById(nonExistentId);
-        // Weryfikujemy, że nie było żadnych dalszych interakcji z repozytorium (np. save).
-        verifyNoMoreInteractions(userRepository);
-    }
-
-    @Test
-    @DisplayName("Powinien zwrócić true, jeśli użytkownik o danym loginie istnieje")
-    void shouldReturnTrueWhenUserExistsByLogin() {
-        // Given
-        String existingLogin = "testuser";
-        when(userRepository.existsByLogin(existingLogin)).thenReturn(true);
-
-        // When
-        boolean result = userService.ifUserExists(existingLogin);
-
-        // Then
-        assertThat(result).isTrue();
-    }
-
-    @Test
-    @DisplayName("Powinien zwrócić false, jeśli użytkownik o danym loginie nie istnieje")
-    void shouldReturnFalseWhenUserDoesNotExistByLogin() {
-        // Given
-        String nonExistentLogin = "nonexistent";
-        when(userRepository.existsByLogin(nonExistentLogin)).thenReturn(false);
-
-        // When
-        boolean result = userService.ifUserExists(nonExistentLogin);
-
-        // Then
-        assertThat(result).isFalse();
-    }
-
-    @Test
-    @DisplayName("Powinien zwrócić true, jeśli użytkownik o danym ID istnieje")
-    void shouldReturnTrueWhenUserExistsById() {
-        // Given
-        Long existingId = 1L;
-        when(userRepository.existsById(existingId)).thenReturn(true);
-
-        // When
-        boolean result = userService.ifUserExists(existingId);
-
-        // Then
-        assertThat(result).isTrue();
-    }
-
-    @Test
-    @DisplayName("Powinien zwrócić false, jeśli użytkownik o danym ID nie istnieje")
-    void shouldReturnFalseWhenUserDoesNotExistById() {
-        // Given
-        Long nonExistentId = 99L;
-        when(userRepository.existsById(nonExistentId)).thenReturn(false);
-
-        // When
-        boolean result = userService.ifUserExists(nonExistentId);
-
-        // Then
-        assertThat(result).isFalse();
-    }
-
-    @Test
-    @DisplayName("Powinien zwrócić listę użytkowników o danej roli")
-    void shouldReturnUsersByRole() {
-        // Given
-        String role = "ROLE_USER";
-        List<User> expectedUsers = List.of(testUser); // Używamy użytkownika z @BeforeEach
-        when(userRepository.getUsersByRoles(role)).thenReturn(expectedUsers);
-
-        // When
-        List<User> actualUsers = userService.getUsersByRole(role);
-
-        // Then
-        assertThat(actualUsers).hasSize(1);
-        assertThat(actualUsers.get(0).getRoles()).isEqualTo(role);
-    }
-
-    @Test
-    @DisplayName("Powinien zwrócić pustą listę, gdy nie ma użytkowników o danej roli")
-    void shouldReturnEmptyListWhenNoUsersForGivenRole() {
-        // Given
-        String role = "ROLE_GUEST";
-        when(userRepository.getUsersByRoles(role)).thenReturn(Collections.emptyList());
-
-        // When
-        List<User> actualUsers = userService.getUsersByRole(role);
-
-        // Then
-        assertThat(actualUsers).isNotNull();
-    }
-
-    @Test
-    @DisplayName("Powinien zwrócić true, gdy kod TOTP jest poprawny a MFA włączone")
-    void shouldReturnTrueWhenTotpIsValidAndMfaIsEnabled() {
-        // Given (Arrange)
-        String secret = "JBSWY3DPEHPK3PXP"; // Przykładowy, znany sekret
-        String validCode = TotpUtil.generateCode(secret, System.currentTimeMillis() / 30000);
-
-        testUser.setMfaEnabled(true);
-        testUser.setMfaSecret(secret);
-        when(userRepository.findById(testUser.getId())).thenReturn(Optional.of(testUser));
-
-        // When (Act)
-        boolean result = userService.verifyTotp(testUser.getId(), validCode);
-
-        // Then (Assert)
-        assertThat(result).isTrue();
-    }
-
-    @Test
-    @DisplayName("Powinien zwrócić false, gdy kod TOTP jest niepoprawny")
-    void shouldReturnFalseWhenTotpIsInvalid() {
-        // Given
-        String secret = "JBSWY3DPEHPK3PXP";
-        String invalidCode = "000000";
-
-        testUser.setMfaEnabled(true);
-        testUser.setMfaSecret(secret);
-        when(userRepository.findById(testUser.getId())).thenReturn(Optional.of(testUser));
-
-        // When
-        boolean result = userService.verifyTotp(testUser.getId(), invalidCode);
-
-        // Then
-        assertThat(result).isFalse();
-    }
-
-    @Test
-    @DisplayName("Powinien zwrócić false przy weryfikacji TOTP, gdy użytkownik nie istnieje")
-    void shouldReturnFalseForVerifyTotpWhenUserNotFound() {
-        // Given
-        Long nonExistentId = 99L;
-        when(userRepository.findById(nonExistentId)).thenReturn(Optional.empty());
-
-        // When
-        boolean result = userService.verifyTotp(nonExistentId, "123456");
-
-        // Then
-        assertThat(result).isFalse();
-    }
-
-    @Test
-    @DisplayName("Powinien zwrócić false przy weryfikacji TOTP, gdy MFA jest wyłączone")
-    void shouldReturnFalseForVerifyTotpWhenMfaIsDisabled() {
-        // Given
-        testUser.setMfaEnabled(false); // MFA jest wyłączone
-        testUser.setMfaSecret("JBSWY3DPEHPK3PXP");
-        when(userRepository.findById(testUser.getId())).thenReturn(Optional.of(testUser));
-
-        // When
-        boolean result = userService.verifyTotp(testUser.getId(), "123456");
-
-        // Then
-        assertThat(result).isFalse();
-    }
-
-    @Test
-    @DisplayName("Powinien zwrócić false przy weryfikacji TOTP, gdy użytkownik nie ma sekretu MFA")
-    void shouldReturnFalseForVerifyTotpWhenMfaSecretIsNull() {
-        // Given
-        testUser.setMfaEnabled(true);
-        testUser.setMfaSecret(null); // Brak sekretu
-        when(userRepository.findById(testUser.getId())).thenReturn(Optional.of(testUser));
-
-        // When
-        boolean result = userService.verifyTotp(testUser.getId(), "123456");
-
-        // Then
-        assertThat(result).isFalse();
-    }
-
 }
