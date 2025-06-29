@@ -16,7 +16,7 @@ public class User_WorkoutImpl implements User_WorkoutService {
     private final User_WorkoutsRepository user_workoutsRepository;
 
     public User_WorkoutImpl(User_WorkoutsRepository userWorkoutsRepository) {
-        user_workoutsRepository = userWorkoutsRepository;
+        this.user_workoutsRepository = userWorkoutsRepository;
     }
 
     @Override

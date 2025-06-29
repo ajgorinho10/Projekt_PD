@@ -25,12 +25,11 @@ import projekt.PD.DataBase.DB_UserWorkout.User_Workouts;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -58,6 +57,7 @@ class UserRestControllerTest {
     @Autowired private ObjectMapper objectMapper;
 
     private User testUser;
+    private User testTrainer;
 
     @BeforeEach
     void setUp() {
@@ -65,6 +65,12 @@ class UserRestControllerTest {
         testUser.setId(1L);
         testUser.setLogin("test-user");
         testUser.setRoles("ROLE_USER");
+
+        testTrainer = new User();
+        testTrainer.setId(2L);
+        testTrainer.setLogin("test-trainer");
+        testTrainer.setRoles("ROLE_TRAINER");
+        testTrainer.setTrainer(new Trainer(2L,testTrainer,"Specjalizacja 1",List.of(),List.of()));
     }
 
     @Test
@@ -141,7 +147,7 @@ class UserRestControllerTest {
     }
 
     @Test
-    @DisplayName("GET /api/users/workout - powinien zwrócić 404, gdy użytkownik nie ma treningów")
+    @DisplayName("GET /api/users/workout")
     @WithMockUser(username = "test-user")
     void getAllUserWorkouts_shouldReturnNotFound_whenNoWorkouts() throws Exception {
         // Given
@@ -151,6 +157,10 @@ class UserRestControllerTest {
         // When & Then
         mockMvc.perform(get("/api/users/workout"))
                 .andExpect(status().isNotFound());
+
+        when(userWorkoutService.findByUser_Id(1L)).thenReturn(List.of(new User_Workouts()));
+        mockMvc.perform(get("/api/users/workout"))
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -178,4 +188,20 @@ class UserRestControllerTest {
         assertThat(workoutCaptor.getValue().getUser().getLogin()).isEqualTo("test-user");
         assertThat(workoutCaptor.getValue().getTitle()).isEqualTo("Trening siłowy");
     }
+
+    @Test
+    @DisplayName("Pobranie listy wszystkich trenerów")
+    @WithMockUser(username = "test-user")
+    void getAllTrainers_shouldReturnOk() throws Exception {
+        when(userService.findUserByLogin("test-user")).thenReturn(testUser);
+        when(trainerService.getAll()).thenReturn(List.of(testTrainer.getTrainer()));
+        mockMvc.perform(get("/api/users/trainer"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)));
+
+        when(trainerService.getAll()).thenReturn(List.of());
+        mockMvc.perform(get("/api/users/trainer"))
+                .andExpect(status().isNotFound());
+    }
+
 }

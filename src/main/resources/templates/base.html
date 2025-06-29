@@ -23,7 +23,7 @@
             <li><a th:href="@{/workout/user}">Moje treningi</a></li>
             <li><a th:href="@{/trainingplan/user}">Moje plany treningowe</a></li>
             <li><a th:href="@{/trainerplan/user}">Moje plany treningowe od Trenera</a></li>
-            <li><a th:href="@{/trainerplan/trainer}">Moje plany treningowe dla użytkowników</a></li>
+            <li><a th:href="@{/trainerplan/trainer}" th:if="${user.trainer!=null}">Moje plany treningowe dla użytkowników</a></li>
         </ul>
 
         <ul>
